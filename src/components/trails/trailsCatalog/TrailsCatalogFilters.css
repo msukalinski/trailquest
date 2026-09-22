@@ -1,0 +1,103 @@
+/* Filters */
+
+.catalog-filter-section {
+    position: relative;
+    z-index: 2;
+    margin-top: -55px;
+}
+
+.catalog-filter-box {
+    padding: 1.5rem;
+    border: 1px solid rgba(22, 59, 45, 0.08);
+    border-radius: 18px;
+    background-color: #ffffff;
+    box-shadow: 0 14px 38px rgba(22, 59, 45, 0.14);
+}
+
+.catalog-filter-box .form-label {
+    margin-bottom: 0.5rem;
+    color: #303a35;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.catalog-filter-box .form-control,
+.catalog-filter-box .form-select {
+    min-height: 48px;
+    border: 1px solid #dce3df;
+    border-radius: 9px;
+    color: #4f5c55;
+    background-color: #fbfcfb;
+    font-size: 0.9rem;
+}
+
+.catalog-filter-box .form-control {
+    padding-left: 2.7rem;
+}
+
+.catalog-filter-box .form-control::placeholder {
+    color: #969f9a;
+}
+
+.catalog-filter-box .form-control:focus,
+.catalog-filter-box .form-select:focus {
+    border-color: #245b46;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(36, 91, 70, 0.12);
+}
+
+.catalog-input-wrapper {
+    position: relative;
+}
+
+.catalog-input-wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    z-index: 1;
+    color: #78847e;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.catalog-search-button {
+    min-height: 48px;
+    border: 0;
+    border-radius: 9px;
+    color: #ffffff;
+    font-weight: 600;
+    background-color: #17553f;
+    box-shadow: 0 5px 14px rgba(23, 85, 63, 0.18);
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.catalog-search-button:hover {
+    color: #ffffff;
+    background-color: #0f4633;
+    box-shadow: 0 7px 18px rgba(23, 85, 63, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+
+@media (max-width: 991.98px) {
+    .catalog-filter-section {
+        margin-top: -40px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .catalog-filter-section {
+        margin-top: -25px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .catalog-filter-box {
+        padding: 1.1rem;
+    }
+}

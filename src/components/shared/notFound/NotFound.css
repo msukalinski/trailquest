@@ -1,8 +1,5 @@
 .not-found-page {
-    background-color: #f4f7f4;
-}
-
-.not-found-main {
+    flex-grow: 1;
     position: relative;
     display: flex;
     min-height: calc(100vh - 150px);
@@ -10,35 +7,29 @@
     align-items: center;
     overflow: hidden;
     background-image:
-        linear-gradient(
-            90deg,
+        linear-gradient(90deg,
             rgba(8, 27, 19, 0.72),
-            rgba(8, 27, 19, 0.35)
-        ),
+            rgba(8, 27, 19, 0.35)),
         url("/images/rila-lakes-hero.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
-.not-found-main::before {
+.not-found-page::before {
     content: "";
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(
-            circle at 15% 20%,
+        radial-gradient(circle at 15% 20%,
             rgba(206, 134, 28, 0.15),
-            transparent 35%
-        ),
-        linear-gradient(
-            180deg,
+            transparent 35%),
+        linear-gradient(180deg,
             transparent 55%,
-            rgba(5, 20, 14, 0.28)
-        );
+            rgba(5, 20, 14, 0.28));
 }
 
-.not-found-main .container {
+.not-found-page .container {
     z-index: 1;
 }
 
@@ -173,7 +164,7 @@
 /* Responsive */
 
 @media (max-width: 767.98px) {
-    .not-found-main {
+    .not-found-page {
         padding: 2rem 0;
         background-position: 60% center;
     }
@@ -184,11 +175,11 @@
 }
 
 @media (max-width: 575.98px) {
-    .not-found-main {
+    .not-found-page {
         padding: 1rem 0;
     }
 
-    .not-found-main .container {
+    .not-found-page .container {
         padding-right: 1rem;
         padding-left: 1rem;
     }

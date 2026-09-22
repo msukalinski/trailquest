@@ -1,8 +1,5 @@
 .my-trails-page {
-    background-color: #f4f7f4;
-}
-
-.my-trails-main {
+    flex-grow: 1;
     background-color: #f4f7f4;
 }
 
@@ -13,11 +10,9 @@
     padding: 4.5rem 0 6rem;
     color: #ffffff;
     background-image:
-        linear-gradient(
-            90deg,
+        linear-gradient(90deg,
             rgba(7, 29, 20, 0.86),
-            rgba(7, 29, 20, 0.3)
-        ),
+            rgba(7, 29, 20, 0.3)),
         url("/images/rila-lakes-hero.jpg");
     background-position: center;
     background-size: cover;
@@ -52,7 +47,7 @@
     line-height: 1.08;
 }
 
-.my-trails-hero-content > p:last-child {
+.my-trails-hero-content>p:last-child {
     max-width: 570px;
     margin: 0;
     color: rgba(255, 255, 255, 0.88);
@@ -150,7 +145,7 @@
     font-size: 1.15rem;
 }
 
-.my-trails-statistic > div:last-child {
+.my-trails-statistic>div:last-child {
     display: flex;
     flex-direction: column;
 }

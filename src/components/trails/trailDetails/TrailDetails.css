@@ -1,8 +1,5 @@
 .trail-details-page {
-    background-color: #f4f7f4;
-}
-
-.trail-details-main {
+    flex-grow: 1;
     background-color: #f4f7f4;
 }
 
@@ -57,7 +54,7 @@
     box-shadow: 0 16px 42px rgba(18, 48, 36, 0.18);
 }
 
-.trail-details-hero > img {
+.trail-details-hero>img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -67,11 +64,9 @@
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(
-            180deg,
+        linear-gradient(180deg,
             rgba(7, 25, 18, 0.05) 25%,
-            rgba(7, 25, 18, 0.88) 100%
-        );
+            rgba(7, 25, 18, 0.88) 100%);
 }
 
 .trail-details-badges {
@@ -130,7 +125,7 @@
     text-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
 }
 
-.trail-details-hero-content > span {
+.trail-details-hero-content>span {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
 }
@@ -174,7 +169,7 @@
     font-weight: 700;
 }
 
-.trail-details-author-summary > div:last-child {
+.trail-details-author-summary>div:last-child {
     display: flex;
     flex-direction: column;
 }
@@ -279,12 +274,12 @@
     border-right: 1px solid #e7ece9;
 }
 
-.trail-details-statistic > i {
+.trail-details-statistic>i {
     color: #ce861c;
     font-size: 1.25rem;
 }
 
-.trail-details-statistic > div {
+.trail-details-statistic>div {
     display: flex;
     flex-direction: column;
 }
@@ -337,13 +332,13 @@
     font-weight: 700;
 }
 
-.trail-details-section > p {
+.trail-details-section>p {
     color: #68736d;
     font-size: 0.93rem;
     line-height: 1.75;
 }
 
-.trail-details-section > p:last-child {
+.trail-details-section>p:last-child {
     margin-bottom: 0;
 }
 
@@ -353,7 +348,7 @@
     gap: 1rem;
 }
 
-.trail-details-highlights > div {
+.trail-details-highlights>div {
     display: flex;
     padding: 0.85rem;
     align-items: flex-start;
@@ -381,13 +376,11 @@
     border-radius: 13px;
     background:
         linear-gradient(rgba(242, 247, 244, 0.9), rgba(242, 247, 244, 0.9)),
-        repeating-linear-gradient(
-            45deg,
+        repeating-linear-gradient(45deg,
             #dfe9e3 0,
             #dfe9e3 1px,
             transparent 1px,
-            transparent 18px
-        );
+            transparent 18px);
 }
 
 .trail-details-map-content {
@@ -460,7 +453,7 @@
     box-shadow: 0 7px 22px rgba(22, 59, 45, 0.07);
 }
 
-.trail-details-sidebar-card > h2 {
+.trail-details-sidebar-card>h2 {
     margin-bottom: 1.2rem;
     color: #163b2d;
     font-family: Georgia, "Times New Roman", serif;
@@ -472,7 +465,7 @@
     margin: 0;
 }
 
-.trail-details-overview > div {
+.trail-details-overview>div {
     display: flex;
     padding: 0.75rem 0;
     align-items: center;
@@ -481,11 +474,11 @@
     border-bottom: 1px solid #e9edea;
 }
 
-.trail-details-overview > div:first-child {
+.trail-details-overview>div:first-child {
     padding-top: 0;
 }
 
-.trail-details-overview > div:last-child {
+.trail-details-overview>div:last-child {
     padding-bottom: 0;
     border-bottom: 0;
 }
@@ -524,7 +517,7 @@
     font-weight: 700;
 }
 
-.trail-details-author > div:last-child {
+.trail-details-author>div:last-child {
     display: flex;
     flex-direction: column;
 }
@@ -556,7 +549,7 @@
     background-color: #163b2d;
 }
 
-.trail-details-safety-card > i {
+.trail-details-safety-card>i {
     color: #efad49;
     font-size: 1.2rem;
 }
@@ -576,7 +569,7 @@
 
 /* Owner controls */
 
-.trail-details-owner-card > p {
+.trail-details-owner-card>p {
     margin-bottom: 0.8rem;
     color: #8b948f;
     font-size: 0.72rem;
@@ -686,7 +679,7 @@
         left: 1rem;
     }
 
-    .trail-details-hero-content > span {
+    .trail-details-hero-content>span {
         display: none;
     }
 
