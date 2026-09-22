@@ -1,27 +1,16 @@
 import { Link } from "react-router";
 
+import './Header.css'
+
 export default function Header() {
     return (
-        <header className="bg-white border-bottom sticky-top">
+        <header className="trail-header bg-white border-bottom sticky-top">
             <nav className="navbar navbar-expand-lg navbar-light container py-3">
                 <Link
                     to="/"
                     className="navbar-brand d-flex align-items-center gap-2 fw-bold"
-                    style={{
-                        color: "#163b2d",
-                        fontFamily: "Georgia, serif",
-                        fontSize: "1.7rem",
-                    }}
                 >
-                    <span
-                        aria-hidden="true"
-                        style={{
-                            color: "#245b46",
-                            fontSize: "1.4rem",
-                            letterSpacing: "-8px",
-                            paddingRight: "8px",
-                        }}
-                    >
+                    <span aria-hidden="true">
                         ▲▲
                     </span>
 
@@ -49,10 +38,6 @@ export default function Header() {
                             <Link
                                 to="/"
                                 className="nav-link active fw-semibold border-bottom border-2"
-                                style={{
-                                    color: "#163b2d",
-                                    borderColor: "#163b2d",
-                                }}
                             >
                                 Home
                             </Link>
@@ -88,7 +73,6 @@ export default function Header() {
                         <Link
                             to="/trails/create"
                             className="btn text-white px-4 py-2 rounded-3"
-                            style={{ backgroundColor: "#ce861c" }}
                         >
                             Share a trail
                         </Link>

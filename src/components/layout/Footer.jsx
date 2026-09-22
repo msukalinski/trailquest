@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 
+import './Footer.css'
+
 export default function Footer() {
     return (
-        <footer className="border-top bg-white py-4 mt-auto">
+        <footer className="trail-footer border-top bg-white py-4 mt-auto">
             <div className="container">
                 <div className="row align-items-center gy-4">
                     <div className="col-lg-5">
@@ -10,19 +12,10 @@ export default function Footer() {
                             <Link
                                 to="/"
                                 className="text-decoration-none fw-bold fs-4"
-                                style={{
-                                    color: "#163b2d",
-                                    fontFamily: "Georgia, serif",
-                                }}
                             >
                                 <span
                                     className="me-2"
                                     aria-hidden="true"
-                                    style={{
-                                        color: "#245b46",
-                                        letterSpacing: "-7px",
-                                        paddingRight: "7px",
-                                    }}
                                 >
                                     ▲▲
                                 </span>

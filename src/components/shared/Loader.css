@@ -1,0 +1,62 @@
+.loader-container {
+    display: flex;
+    min-height: 320px;
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.25rem;
+    color: #163b2d;
+}
+
+.loader-animation {
+    position: relative;
+    display: flex;
+    width: 76px;
+    height: 76px;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-ring {
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    border: 4px solid rgba(36, 91, 70, 0.15);
+    border-top-color: #ce861c;
+    border-right-color: #245b46;
+    border-radius: 50%;
+    animation: trailquest-spin 1.3s linear infinite;
+}
+
+.loader-mountain {
+    padding-right: 7px;
+    color: #245b46;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -7px;
+}
+
+.loader-text {
+    margin: 0;
+    color: #5e6b64;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02rem;
+}
+
+@keyframes trailquest-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* @media (prefers-reduced-motion: reduce) {
+    .loader-ring {
+        animation: none;
+    }
+} */

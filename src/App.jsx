@@ -9,6 +9,7 @@ import MyTrails from "./components/trails/MyTrails"
 import Login from "./components/auth/Login"
 import Register from "./components/auth/Register"
 import NotFound from "./components/shared/NotFound"
+import Loader from "./components/shared/Loader"
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
 					<Route path="/register" element={<Register />} />
 
 					<Route path="*" element={<NotFound />} />
+					{/* <Route path="*" element={<Loader text={'Please wait'} />} /> */}
 				</Route>
 			</Routes>
 		</>
