@@ -215,7 +215,7 @@ export default function CreateTrailForm() {
 
                     <div>
                         <h2>Image and route</h2>
-                        <p>Add an image and an optional map link for the route.</p>
+                        <p>Add an image {/* and an optional map link */} for the route.</p>
                     </div>
                 </div>
 
@@ -241,7 +241,7 @@ export default function CreateTrailForm() {
                         <p className="create-field-hint">Use a direct link to a landscape image of the trail.</p>
                     </div>
 
-                    <div className="col-12">
+                    {/* <div className="col-12">
                         <label htmlFor="trail-map" className="form-label">
                             Map or route URL
                             <span className="create-optional">Optional</span>
@@ -258,7 +258,7 @@ export default function CreateTrailForm() {
                                 placeholder="Google Maps, Garmin or another route link"
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </section>
 
