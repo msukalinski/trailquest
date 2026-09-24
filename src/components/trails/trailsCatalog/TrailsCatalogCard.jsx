@@ -2,8 +2,14 @@ import { Link } from "react-router";
 
 import './TrailsCatalogCard.css'
 
+const difficultyClass = {
+    Easy: 'easy',
+    Moderate: 'moderate',
+    Hard: 'hard',
+}
+
 export default function TrailsCatalogCard({
-    image,
+    imageUrl,
     title,
     location,
     description,
@@ -11,20 +17,19 @@ export default function TrailsCatalogCard({
     duration,
     elevation,
     difficulty,
-    difficultyClass,
     detailsPath,
 }) {
     return (
         <article className="catalog-trail-card">
             <div className="catalog-card-image-wrapper">
                 <img
-                    src={image}
+                    src={imageUrl}
                     alt={title}
                     className="catalog-card-image"
                 />
 
                 <span
-                    className={`catalog-difficulty ${difficultyClass}`}
+                    className={`catalog-difficulty ${difficulty.toLowerCase()}`}
                 >
                     {difficulty}
                 </span>
@@ -102,6 +107,6 @@ export default function TrailsCatalogCard({
                     />
                 </Link>
             </div>
-        </article>
+        </article >
     );
 }

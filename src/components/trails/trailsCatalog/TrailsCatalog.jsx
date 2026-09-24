@@ -1,9 +1,35 @@
+import { useEffect, useState } from "react";
 import "./TrailsCatalog.css";
 
 import TrailsCatalogCard from "./TrailsCatalogCard";
 import TrailsCatalogFilters from "./TrailsCatalogFilters";
 
 export default function TrailsCatalog() {
+    const [trails, setTrails] = useState([]);
+
+    useEffect(() => {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+        fetch(`${supabaseUrl}/rest/v1/trails`, {
+            headers: {
+                'apikey': supabaseKey
+            }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Request failed ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setTrails(data);
+            })
+            .catch(err => console.log('Error fetching trails', err))
+    }, []);
+
     return (
         <div className="trails-catalog-page">
 
@@ -46,83 +72,7 @@ export default function TrailsCatalog() {
                     </div>
 
                     <div className="catalog-grid">
-                        <TrailsCatalogCard
-                            image="https://media.timeout.com/images/106041640/750/562/image.jpg"
-                            title="Seven Rila Lakes"
-                            location="Rila Mountain, Bulgaria"
-                            description="A beautiful circular route passing through the famous glacial lakes of Rila."
-                            distance="17 km"
-                            duration="6–8 h"
-                            elevation="550 m"
-                            difficulty="Hard"
-                            difficultyClass="hard"
-                            detailsPath="/trails/1"
-                        />
-
-                        <TrailsCatalogCard
-                            image="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022.jpg"
-                            title="Vitosha Golden Bridges"
-                            location="Vitosha Mountain, Bulgaria"
-                            description="A peaceful forest trail leading to one of Vitosha's most recognisable natural landmarks."
-                            distance="8 km"
-                            duration="3–4 h"
-                            elevation="240 m"
-                            difficulty="Easy"
-                            difficultyClass="easy"
-                            detailsPath="/trails/2"
-                        />
-
-                        <TrailsCatalogCard
-                            image="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022"
-                            title="Musala Peak"
-                            location="Rila Mountain, Bulgaria"
-                            description="Climb to the highest summit in Bulgaria and enjoy breathtaking mountain views."
-                            distance="14 km"
-                            duration="6–9 h"
-                            elevation="1,250 m"
-                            difficulty="Moderate"
-                            difficultyClass="moderate"
-                            detailsPath="/trails/3"
-                        />
-
-                        <TrailsCatalogCard
-                            image="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022"
-                            title="Koncheto Ridge"
-                            location="Pirin Mountain, Bulgaria"
-                            description="A challenging high-mountain route across one of Bulgaria's most dramatic ridges."
-                            distance="18 km"
-                            duration="8–10 h"
-                            elevation="1,400 m"
-                            difficulty="Hard"
-                            difficultyClass="hard"
-                            detailsPath="/trails/4"
-                        />
-
-                        <TrailsCatalogCard
-                            image="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022"
-                            title="Botev Peak"
-                            location="Balkan Mountains, Bulgaria"
-                            description="A demanding route to the highest peak in the Balkan Mountains."
-                            distance="21 km"
-                            duration="8–10 h"
-                            elevation="1,300 m"
-                            difficulty="Hard"
-                            difficultyClass="hard"
-                            detailsPath="/trails/5"
-                        />
-
-                        <TrailsCatalogCard
-                            image="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022"
-                            title="Smolyan Lakes"
-                            location="Rhodope Mountains, Bulgaria"
-                            description="A relaxing woodland route connecting several peaceful mountain lakes."
-                            distance="10 km"
-                            duration="4–5 h"
-                            elevation="320 m"
-                            difficulty="Easy"
-                            difficultyClass="easy"
-                            detailsPath="/trails/6"
-                        />
+                        {trails.map(trail => <TrailsCatalogCard key={trail.id} {...trail} />)}
                     </div>
 
                     {/* Static pagination */}
