@@ -2,13 +2,8 @@ import { Link } from "react-router";
 
 import './TrailsCatalogCard.css'
 
-const difficultyClass = {
-    Easy: 'easy',
-    Moderate: 'moderate',
-    Hard: 'hard',
-}
-
 export default function TrailsCatalogCard({
+    id,
     imageUrl,
     title,
     location,
@@ -17,7 +12,7 @@ export default function TrailsCatalogCard({
     duration,
     elevation,
     difficulty,
-    detailsPath,
+    onDetails
 }) {
     return (
         <article className="catalog-trail-card">
@@ -96,8 +91,9 @@ export default function TrailsCatalogCard({
                 </div>
 
                 <Link
-                    to={detailsPath}
+                    to={`/trails/${id}/details`}
                     className="catalog-details-link"
+                    onClick={onDetails}
                 >
                     View trail details
 

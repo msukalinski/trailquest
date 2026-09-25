@@ -94,6 +94,16 @@
     background-color: #ffe0e0;
 }
 
+.trail-details-badge.moderate {
+    color: #945d0b;
+    background-color: #fff0d5;
+}
+
+.trail-details-badge.easy {
+    color: #24672b;
+    background-color: #dcf1d9;
+}
+
 .trail-details-badge.featured {
     color: #ffffff;
     background-color: rgba(206, 134, 28, 0.94);

@@ -1,10 +1,10 @@
 import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 
-import './PopularTrails.css'
-import TrailCard from './TrailCard';
+import './HomeTrails.css'
+import HomeTrailCard from '../home-trail-card/HomeTrailCard';
 
-export default function PopularTrails() {
+export default function HomeTrails() {
 
     const [trails, setTrails] = useState([]);
 
@@ -55,7 +55,7 @@ export default function PopularTrails() {
             {trails.length > 0
                 ? (
                     <div className="row g-4">
-                        {trails.map(trail => <TrailCard key={trail.id} {...trail} />)}
+                        {trails.map(trail => <HomeTrailCard key={trail.id} {...trail} />)}
                     </div>
                 )
                 : <h2>No trails added yet</h2>

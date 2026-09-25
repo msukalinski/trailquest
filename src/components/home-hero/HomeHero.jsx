@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
-import './HeroSection.css'
+import './HomeHero.css'
 
-export default function HeroSection() {
+export default function HomeHero() {
     return (
         <section className="home-hero position-relative text-white">
             <div className="container position-relative py-5 d-flex flex-column justify-content-center">

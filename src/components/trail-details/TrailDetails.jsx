@@ -1,8 +1,58 @@
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 import './TrailDetails.css'
+import { useEffect, useState } from "react";
+import Loader from "../loader/Loader";
+import ErrorMessage from "../error-message/ErrorMessage";
+import NotFound from "../not-found/NotFound";
 
 export default function TrailDetails() {
+    const { trailId } = useParams();
+
+    const [trail, setTrail] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+        fetch(
+            `${supabaseUrl}/rest/v1/trails?select=*&id=eq.${encodeURIComponent(trailId)}`,
+            {
+                headers: { apikey: supabaseKey },
+                signal: controller.signal
+            }
+        )
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Request failed: ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then(data => setTrail(data[0] ?? null))
+            .catch(err => {
+                if (err.name !== 'AbortError') {
+                    console.error(err);
+                    setError('Could not load this trail.');
+                }
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            });
+
+    }, [trailId]);
+
+    if (loading) return <Loader />;
+    if (error) return <ErrorMessage message={error.message} />;
+    if (!trail) return <NotFound />;
+
     return (
         <div className="trail-details-page">
 
@@ -34,7 +84,7 @@ export default function TrailDetails() {
                             </li>
 
                             <li aria-current="page">
-                                Seven Rila Lakes
+                                {trail.title}
                             </li>
                         </ol>
                     </nav>
@@ -46,15 +96,16 @@ export default function TrailDetails() {
                 <div className="container">
                     <div className="trail-details-hero">
                         <img
-                            src="https://www.mountain-forecast.com/system/images/25101/large/Vihren.jpg?1544231022"
-                            alt="Seven Rila Lakes trail"
+                            src={trail.imageUrl}
+                            alt={trail.title}
                         />
 
                         <div className="trail-details-hero-overlay" />
 
                         <div className="trail-details-badges">
-                            <span className="trail-details-badge hard">
-                                Hard
+                            <span className={
+                                `trail-details-badge ${trail.difficulty?.toLowerCase()}`}>
+                                {trail.difficulty}
                             </span>
 
                             <span className="trail-details-badge featured">
@@ -72,15 +123,15 @@ export default function TrailDetails() {
                                     className="bi bi-geo-alt-fill"
                                     aria-hidden="true"
                                 />
-                                Rila Mountain, Bulgaria
+                                {trail.location}
                             </p>
 
-                            <h1>Seven Rila Lakes</h1>
+                            <h1>{trail.title}</h1>
 
-                            <span>
+                            {/* <span>
                                 A breathtaking journey through Bulgaria’s
                                 most famous glacial lakes.
-                            </span>
+                            </span> */}
                         </div>
                     </div>
 
@@ -142,7 +193,7 @@ export default function TrailDetails() {
 
                                     <div>
                                         <span>Distance</span>
-                                        <strong>17 km</strong>
+                                        <strong>{trail.distance} km</strong>
                                     </div>
                                 </div>
 
@@ -154,7 +205,7 @@ export default function TrailDetails() {
 
                                     <div>
                                         <span>Duration</span>
-                                        <strong>6–8 hours</strong>
+                                        <strong>{trail.duration} hours</strong>
                                     </div>
                                 </div>
 
@@ -166,7 +217,7 @@ export default function TrailDetails() {
 
                                     <div>
                                         <span>Elevation</span>
-                                        <strong>550 m</strong>
+                                        <strong>{trail.elevation} m</strong>
                                     </div>
                                 </div>
 
@@ -178,7 +229,7 @@ export default function TrailDetails() {
 
                                     <div>
                                         <span>Difficulty</span>
-                                        <strong>Hard</strong>
+                                        <strong>{trail.difficulty}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -196,22 +247,7 @@ export default function TrailDetails() {
                                     <h2>About this trail</h2>
                                 </div>
 
-                                <p>
-                                    The Seven Rila Lakes trail is one of the
-                                    most beautiful and recognisable hiking
-                                    routes in Bulgaria. The route passes
-                                    through seven glacial lakes situated at
-                                    different elevations in the Rila
-                                    Mountains.
-                                </p>
-
-                                <p>
-                                    The hike offers panoramic mountain
-                                    views, rocky sections and open alpine
-                                    terrain. Some sections can be steep, so
-                                    suitable footwear and good preparation
-                                    are recommended.
-                                </p>
+                                <p>{trail.description}</p>
                             </article>
 
                             {/* Highlights Could implement later */}
@@ -299,7 +335,7 @@ export default function TrailDetails() {
                             </section> */}
 
                             {/* Map */}
-                            <section className="trail-details-section">
+                            {/* <section className="trail-details-section">
                                 <div className="trail-details-section-heading">
                                     <div
                                         className="trail-details-section-icon"
@@ -339,12 +375,12 @@ export default function TrailDetails() {
                                         </button>
                                     </div>
                                 </div>
-                            </section>
+                            </section> */}
                         </div>
 
                         {/* Sidebar */}
                         <aside className="trail-details-sidebar">
-                            
+
                             {/* Could also implement later */}
                             {/* <section className="trail-details-sidebar-card">
                                 <h2>Trail overview</h2>

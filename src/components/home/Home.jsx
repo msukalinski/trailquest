@@ -1,11 +1,10 @@
-import HeroSection from "./heroSection/HeroSection";
-import TrailSearch from "./trailSearch/TrailSearch";
-import PopularTrails from "./popularTrails/PopularTrails";
+import HomeHero from "../home-hero/HomeHero";
+import HomeTrails from "../home-trails/HomeTrails";
 
 import './Home.css'
 
 export default function Home() {
-    
+
 
     return (
 
@@ -13,13 +12,13 @@ export default function Home() {
         <div className="home-page bg-white">
 
             {/* Hero */}
-            <HeroSection />
+            <HomeHero />
 
             {/* Search section */}
-            <TrailSearch />
+            {/* <TrailSearch /> located in not-used-components folder */}
 
             {/* Popular trails */}
-            <PopularTrails />
+            <HomeTrails />
 
         </div>
     );

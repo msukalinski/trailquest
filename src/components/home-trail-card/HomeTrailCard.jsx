@@ -4,7 +4,7 @@ const difficultyBadgeColor = {
     Hard: 'badge bg-danger-subtle text-danger px-3 py-2',
 }
 
-export default function TrailCard({
+export default function HomeTrailCard({
     imageUrl,
     title,
     location,

@@ -15,7 +15,7 @@ export default function ErrorMessage({
             </div>
 
             <div className="error-message-content">
-                <h2>{title}</h2>
+                {/* <h2>{title}</h2> */}
                 <p>{message}</p>
             </div>
         </div>

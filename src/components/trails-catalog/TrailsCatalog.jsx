@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./TrailsCatalog.css";
 
-import TrailsCatalogCard from "./TrailsCatalogCard";
-import TrailsCatalogFilters from "./TrailsCatalogFilters";
+import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
+import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
@@ -24,7 +24,6 @@ export default function TrailsCatalog() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setTrails(data);
             })
             .catch(err => console.log('Error fetching trails', err))
@@ -52,7 +51,7 @@ export default function TrailsCatalog() {
             </section>
 
             {/* Filters */}
-            <TrailsCatalogFilters />
+            <TrailsCatalogSearch />
 
             {/* Trails */}
             <section className="catalog-results-section">
@@ -67,13 +66,19 @@ export default function TrailsCatalog() {
                         </div>
 
                         <p className="catalog-results-count">
-                            Showing <strong>6</strong> trails
+                            Showing <strong>{trails.length}</strong> trails
                         </p>
                     </div>
 
-                    <div className="catalog-grid">
-                        {trails.map(trail => <TrailsCatalogCard key={trail.id} {...trail} />)}
-                    </div>
+                    {trails.length === 0
+                        ? <h2>There is no trails added yet</h2>
+                        : (
+                            <div className="catalog-grid">
+                                {trails.map(trail => <TrailsCatalogCard key={trail.id} {...trail} />)}
+                            </div>
+
+                        )
+                    }
 
                     {/* Static pagination */}
                     <nav

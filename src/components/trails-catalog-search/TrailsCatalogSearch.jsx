@@ -1,6 +1,6 @@
-import './TrailsCatalogFilters.css'
+import './TrailsCatalogSearch.css'
 
-export default function TrailsCatalogFilters() {
+export default function TrailsCatalogSearch() {
     return (
         <section className="catalog-filter-section">
             <div className="container">

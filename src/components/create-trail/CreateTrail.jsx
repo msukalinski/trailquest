@@ -1,5 +1,5 @@
 import './CreateTrail.css'
-import CreateTrailForm from "./CreateTrailForm";
+import CreateTrailForm from "../create-trail-form/CreateTrailForm";
 
 export default function CreateTrail() {
     return (
@@ -21,6 +21,7 @@ export default function CreateTrail() {
             <section className="create-trail-content">
                 <div className="container">
                     <div className="create-trail-layout">
+                        
                         {/* Form */}
                         <CreateTrailForm />
 
