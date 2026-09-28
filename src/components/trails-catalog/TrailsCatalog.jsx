@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
-import "./TrailsCatalog.css";
 
 import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
 import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
+import { supabase } from "../../lib/supabase";
+import "./TrailsCatalog.css";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
 
     useEffect(() => {
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const loadTrails = async () => {
+            const { data, error } = await supabase
+                .from('trails')
+                .select('*');
 
-        fetch(`${supabaseUrl}/rest/v1/trails`, {
-            headers: {
-                'apikey': supabaseKey
+            if (error) {
+                console.error('Error fetching trails', error.message);
+                return;
             }
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Request failed ${response.status}`);
-                }
 
-                return response.json();
-            })
-            .then(data => {
-                setTrails(data);
-            })
-            .catch(err => console.log('Error fetching trails', err))
+            setTrails(data);
+        }
+
+        loadTrails();
     }, []);
 
     return (
