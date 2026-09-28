@@ -1,38 +1,29 @@
 import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 
-import './HomeTrails.css'
 import HomeTrailCard from '../home-trail-card/HomeTrailCard';
+import { supabase } from '../../lib/supabase';
+import './HomeTrails.css'
 
 export default function HomeTrails() {
 
     const [trails, setTrails] = useState([]);
 
     useEffect(() => {
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const loadLatestTrails = async () => {
+            const { data, error } = await supabase
+                .from('trails')
+                .select('*')
+                .order('createdAt', { ascending: false })
+                .limit(3);
 
-        fetch(`${supabaseUrl}/rest/v1/trails?select=*&order=createdAt.desc&limit=3`, {
-            headers: {
-                'apikey': supabaseKey
+            if (error) {
+                console.error('Error fetching latest trails', error.message);
+                return;
             }
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Request failed ${response.status}`);
-                }
-
-                return response.json();
-            })
-            .then(data => {
-                // const result = Object.values(data)
-                // .sort((a, b) => (b.createdAt).localeCompare(a.createdAt))
-                // .slice(0, 3);
-
-                setTrails(data);
-            })
-            // .then(data => console.log(data))
-            .catch(err => console.log('Error fetching trails', err));
+            setTrails(data);
+        }
+        loadLatestTrails();
     }, []);
 
     return (

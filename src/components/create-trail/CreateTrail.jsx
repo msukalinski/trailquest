@@ -1,55 +1,45 @@
 import './CreateTrail.css'
 import CreateTrailForm from "../create-trail-form/CreateTrailForm";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import ErrorMessage from '../error-message/ErrorMessage';
+import { supabase } from '../../lib/supabase';
 
 export default function CreateTrail() {
     const navigate = useNavigate();
     const [error, setError] = useState('')
 
-    const createTrailHandler = (e) => {
+    const createTrailHandler = async (e) => {
         e.preventDefault();
+        console.log('submit');
+        setError('');
 
         const formData = new FormData(e.currentTarget);
 
-        const data = Object.fromEntries(formData);
+        const values = Object.fromEntries(formData);
 
 
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const newTrail = {
+            ...values,
+            distance: Number(values.distance),
+            duration: Number(values.duration),
+            elevation: Number(values.elevation),
+        }
 
-        fetch(`${supabaseUrl}/rest/v1/trails`, {
-            method: 'POST',
-            headers: {
-                apikey: supabaseKey,
-                'Content-Type': 'application/json',
-                Prefer: 'return=representation'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(async response => {
-                const result = await response.json();
+        const { data: createdTrail, error } = await supabase
+            .from('trails')
+            .insert(newTrail)
+            .select()
+            .single();
 
-                if (!response.ok) {
-                    console.log(result.status, result)
-                    throw new Error(result.message || 'Could not publish the trail');
-                }
-
-                return result;
-
-            })
-            .then(result => {
-                const createdTrail = result[0];
-
-                console.log(createdTrail);
-
-                navigate(`/trails/${createdTrail.id}/details`);
-            })
-            .catch(err => {
-                setError(err.message);
-            })
-    }
+        if (error) {
+            console.error('Create trail error', error);
+            setError(error.message);
+            return;
+        }
+        console.log(createdTrail);
+        navigate(`/trails/${createdTrail.id}/details`);
+    };
 
     return (
         <>
