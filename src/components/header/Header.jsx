@@ -1,8 +1,23 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
+import { supabase } from "../../lib/supabase";
 import './Header.css'
+import { useState } from "react";
 
 export default function Header() {
+    const navigate = useNavigate();
+    const [error, setError] = useState('');
+
+    const logoutHandler = async () => {
+        const {error} = await supabase.auth.signOut();
+
+        if(error) {
+            setError(error.message);
+        }
+
+        navigate('/');
+    }
+
     return (
         <header className="trail-header bg-white border-bottom sticky-top">
             <nav className="navbar navbar-expand-lg navbar-light container py-3">
@@ -76,6 +91,11 @@ export default function Header() {
                         >
                             Share a trail
                         </Link>
+
+                        <button
+                            type="button"
+                            className="btn text-white px-3 py-2 rounded-3"
+                            onClick={logoutHandler}>Logout</button>
                     </div>
                 </div>
             </nav>
