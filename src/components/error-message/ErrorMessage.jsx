@@ -1,7 +1,7 @@
 import './ErrorMessage.css'
 
 export default function ErrorMessage({
-    title,
+    // title,
     message,
 }) {
     return (

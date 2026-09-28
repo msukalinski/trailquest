@@ -2,9 +2,11 @@ import { Link } from "react-router";
 
 import './CreateTrailForm.css'
 
-export default function CreateTrailForm() {
+export default function CreateTrailForm({
+    onCreate
+}) {
     return (
-        <form className="create-trail-form">
+        <form className="create-trail-form" onSubmit={onCreate}>
             {/* Basic information */}
             <section className="create-form-section">
                 <div className="create-section-heading">
@@ -298,7 +300,7 @@ export default function CreateTrailForm() {
                     Cancel
                 </Link>
 
-                <button type="button" className="create-submit-button btn">
+                <button type="submit" className="create-submit-button btn">
                     <i className="bi bi-send me-2" aria-hidden="true" />
                     Publish trail
                 </button>
