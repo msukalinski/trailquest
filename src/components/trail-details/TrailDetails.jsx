@@ -1,13 +1,15 @@
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 import './TrailDetails.css'
 import { useEffect, useState } from "react";
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 import NotFound from "../not-found/NotFound";
+import { deleteTrail, getProfile } from "../../services/trailService";
 
 export default function TrailDetails() {
     const { trailId } = useParams();
+    const navigate = useNavigate();
 
     const [trail, setTrail] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -34,7 +36,20 @@ export default function TrailDetails() {
 
                 return response.json();
             })
-            .then(data => setTrail(data[0] ?? null))
+            .then(data => {
+                const result = data[0] ?? null;
+
+                if(!result?.ownerId) return result;
+
+                return getProfile(result.ownerId)
+                    .then(owner => ({...result, owner}));
+            })
+            .then(trail => {
+                if(!controller.signal.aborted) {
+                    setTrail(trail);
+                    console.log(trail);
+                }
+            })
             .catch(err => {
                 if (err.name !== 'AbortError') {
                     console.error(err);
@@ -47,11 +62,29 @@ export default function TrailDetails() {
                 }
             });
 
+            return () => controller.abort();
+
     }, [trailId]);
 
     if (loading) return <Loader />;
     if (error) return <ErrorMessage message={error.message} />;
     if (!trail) return <NotFound />;
+
+    const deleteTrailHandler = async () => {
+        const confirmed = window.confirm(`Are you sure you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
+
+        if (!confirmed) return;
+
+        try {
+            await deleteTrail(trailId);
+
+            navigate('/trails');
+        } catch (err) {
+            console.error('Delete trail error', err.message);
+            setError(err.message);
+            return;
+        }
+    }
 
     return (
         <div className="trail-details-page">
@@ -471,6 +504,7 @@ export default function TrailDetails() {
                                 <button
                                     type="button"
                                     className="trail-details-delete-button"
+                                    onClick={deleteTrailHandler}
                                 >
                                     <i
                                         className="bi bi-trash3"

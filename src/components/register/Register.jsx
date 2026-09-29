@@ -100,7 +100,6 @@ export default function Register() {
                     <RegisterForm
                         onSubmit={registerSubmitHandler}
                         error={error}
-                        success={success}
                         submitting={submitting}
                     />
                 </div>

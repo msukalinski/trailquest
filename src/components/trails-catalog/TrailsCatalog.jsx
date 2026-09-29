@@ -4,23 +4,21 @@ import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
 import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
 import { supabase } from "../../lib/supabase";
 import "./TrailsCatalog.css";
+import { getTrails } from "../../services/trailService";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
 
     useEffect(() => {
         const loadTrails = async () => {
-            const { data, error } = await supabase
-                .from('trails')
-                .select('*');
-
-            if (error) {
-                console.error('Error fetching trails', error.message);
-                return;
+            try {
+                const data = await getTrails();
+                console.log(data);
+                setTrails(data);
+            } catch (err) {
+                console.error('Error fetching trails', err.message);
             }
-
-            setTrails(data);
-        }
+        };
 
         loadTrails();
     }, []);

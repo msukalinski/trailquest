@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import ErrorMessage from '../error-message/ErrorMessage';
 import { supabase } from '../../lib/supabase';
+import { createTrail } from '../../services/trailService';
 
 export default function CreateTrail() {
     const navigate = useNavigate();
@@ -11,7 +12,6 @@ export default function CreateTrail() {
 
     const createTrailHandler = async (e) => {
         e.preventDefault();
-        console.log('submit');
         setError('');
 
         const formData = new FormData(e.currentTarget);
@@ -26,19 +26,15 @@ export default function CreateTrail() {
             elevation: Number(values.elevation),
         }
 
-        const { data: createdTrail, error } = await supabase
-            .from('trails')
-            .insert(newTrail)
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Create trail error', error);
-            setError(error.message);
+        try {
+            const createdTrail = await createTrail(newTrail)
+            navigate(`/trails/${createdTrail.id}/details`);
+            console.log(createdTrail);
+        } catch (err) {
+            console.error('Create trail error', err.message);
+            setError(err.message);
             return;
         }
-        console.log(createdTrail);
-        navigate(`/trails/${createdTrail.id}/details`);
     };
 
     return (

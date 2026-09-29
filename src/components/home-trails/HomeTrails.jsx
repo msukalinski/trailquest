@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import HomeTrailCard from '../home-trail-card/HomeTrailCard';
 import { supabase } from '../../lib/supabase';
 import './HomeTrails.css'
+import { getLatestTrails } from '../../services/trailService';
 
 export default function HomeTrails() {
 
@@ -11,17 +12,12 @@ export default function HomeTrails() {
 
     useEffect(() => {
         const loadLatestTrails = async () => {
-            const { data, error } = await supabase
-                .from('trails')
-                .select('*')
-                .order('createdAt', { ascending: false })
-                .limit(3);
-
-            if (error) {
-                console.error('Error fetching latest trails', error.message);
-                return;
+            try {
+                const data = await getLatestTrails();
+                setTrails(data);
+            } catch (err) {
+                console.error('Error fetching latest trails', err.message);
             }
-            setTrails(data);
         }
         loadLatestTrails();
     }, []);
