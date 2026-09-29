@@ -13,7 +13,6 @@ export default function TrailsCatalog() {
         const loadTrails = async () => {
             try {
                 const data = await getTrails();
-                console.log(data);
                 setTrails(data);
             } catch (err) {
                 console.error('Error fetching trails', err.message);

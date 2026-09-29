@@ -40,6 +40,28 @@ export async function getLatestTrails() {
     return data;
 }
 
+export async function getTrailById(id) {
+    const { data, error } = await supabase
+        .from('trails')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    if (!data) {
+        return null;
+    }
+
+    const owner = data.ownerId
+        ? await getProfile(data.ownerId)
+        : null;
+
+    return { ...data, owner };
+}
+
 export async function createTrail(newTrail) {
     const { data, error } = await supabase
         .from('trails')

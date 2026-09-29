@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 import NotFound from "../not-found/NotFound";
-import { deleteTrail, getProfile } from "../../services/trailService";
+import { deleteTrail, getTrailById } from "../../services/trailService";
 
 export default function TrailDetails() {
     const { trailId } = useParams();
@@ -15,60 +15,46 @@ export default function TrailDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // const nameInitials = trail.ownerId?.firstName
+
 
     useEffect(() => {
         const controller = new AbortController();
 
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const loadTrail = async () => {
+            setLoading(true);
+            setError('');
 
-        fetch(
-            `${supabaseUrl}/rest/v1/trails?select=*&id=eq.${encodeURIComponent(trailId)}`,
-            {
-                headers: { apikey: supabaseKey },
-                signal: controller.signal
-            }
-        )
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Request failed: ${response.status}`);
+            try {
+                const data = await getTrailById(trailId, controller.signal);
+
+                if (!controller.signal.aborted) {
+                    setTrail(data);
                 }
-
-                return response.json();
-            })
-            .then(data => {
-                const result = data[0] ?? null;
-
-                if(!result?.ownerId) return result;
-
-                return getProfile(result.ownerId)
-                    .then(owner => ({...result, owner}));
-            })
-            .then(trail => {
-                if(!controller.signal.aborted) {
-                    setTrail(trail);
-                    console.log(trail);
-                }
-            })
-            .catch(err => {
-                if (err.name !== 'AbortError') {
+            } catch (err) {
+                if (!controller.signal.aborted) {
                     console.error(err);
-                    setError('Could not load this trail.');
+                    setError('Could not load this trail');
                 }
-            })
-            .finally(() => {
+            } finally {
                 if (!controller.signal.aborted) {
                     setLoading(false);
                 }
-            });
+            }
+        }
 
-            return () => controller.abort();
+        loadTrail();
+
+        return () => controller.abort();
 
     }, [trailId]);
 
     if (loading) return <Loader />;
     if (error) return <ErrorMessage message={error.message} />;
     if (!trail) return <NotFound />;
+
+    const nameInitials = `${trail?.owner.firstName[0]}${trail?.owner.lastName[0]}`;
+    console.log(nameInitials);
 
     const deleteTrailHandler = async () => {
         const confirmed = window.confirm(`Are you sure you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
@@ -175,12 +161,12 @@ export default function TrailDetails() {
                                 className="trail-details-avatar"
                                 aria-hidden="true"
                             >
-                                AM
+                                {nameInitials}
                             </div>
 
                             <div>
                                 <span>Shared by</span>
-                                <strong>Alex Morgan</strong>
+                                <strong>{`${trail.owner.firstName} ${trail.owner.lastName}`}</strong>
                             </div>
                         </div>
 
@@ -454,11 +440,11 @@ export default function TrailDetails() {
                                         className="trail-details-author-avatar"
                                         aria-hidden="true"
                                     >
-                                        AM
+                                        {nameInitials}
                                     </div>
 
                                     <div>
-                                        <strong>Alex Morgan</strong>
+                                        <strong>{`${trail.owner.firstName} ${trail.owner.lastName}`}</strong>
                                         <span>Member since 2026</span>
                                     </div>
                                 </div>
