@@ -1,11 +1,12 @@
 import { Link, useNavigate, useParams } from "react-router";
-
-import './TrailDetails.css'
 import { useEffect, useState } from "react";
+
+import { deleteTrail, getTrailById } from "../../services/trailService";
+
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 import NotFound from "../not-found/NotFound";
-import { deleteTrail, getTrailById } from "../../services/trailService";
+import './TrailDetails.css'
 
 export default function TrailDetails() {
     const { trailId } = useParams();
@@ -223,10 +224,7 @@ export default function TrailDetails() {
                                 </div>
 
                                 <div className="trail-details-statistic">
-                                    <i
-                                        className="bi bi-clock"
-                                        aria-hidden="true"
-                                    />
+                                    <i className="bi bi-clock" aria-hidden="true" />
 
                                     <div>
                                         <span>Duration</span>
@@ -235,11 +233,7 @@ export default function TrailDetails() {
                                 </div>
 
                                 <div className="trail-details-statistic">
-                                    <i
-                                        className="bi bi-graph-up-arrow"
-                                        aria-hidden="true"
-                                    />
-
+                                    <i className="bi bi-graph-up-arrow" aria-hidden="true" />
                                     <div>
                                         <span>Elevation</span>
                                         <strong>{trail.elevation} m</strong>
@@ -247,10 +241,7 @@ export default function TrailDetails() {
                                 </div>
 
                                 <div className="trail-details-statistic">
-                                    <i
-                                        className="bi bi-reception-4"
-                                        aria-hidden="true"
-                                    />
+                                    <i className="bi bi-reception-4" aria-hidden="true" />
 
                                     <div>
                                         <span>Difficulty</span>
@@ -274,169 +265,10 @@ export default function TrailDetails() {
 
                                 <p>{trail.description}</p>
                             </article>
-
-                            {/* Highlights Could implement later */}
-                            {/* <section className="trail-details-section">
-                                <div className="trail-details-section-heading">
-                                    <div
-                                        className="trail-details-section-icon"
-                                        aria-hidden="true"
-                                    >
-                                        <i className="bi bi-stars" />
-                                    </div>
-
-                                    <h2>What to expect</h2>
-                                </div>
-
-                                <div className="trail-details-highlights">
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Seven beautiful glacial lakes
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Panoramic views over Rila
-                                            Mountain
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Clearly marked mountain paths
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Steep and rocky sections
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Limited shade on the higher
-                                            sections
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <i
-                                            className="bi bi-check-circle-fill"
-                                            aria-hidden="true"
-                                        />
-
-                                        <span>
-                                            Suitable for experienced hikers
-                                        </span>
-                                    </div>
-                                </div>
-                            </section> */}
-
-                            {/* Map */}
-                            {/* <section className="trail-details-section">
-                                <div className="trail-details-section-heading">
-                                    <div
-                                        className="trail-details-section-icon"
-                                        aria-hidden="true"
-                                    >
-                                        <i className="bi bi-map" />
-                                    </div>
-
-                                    <h2>Route map</h2>
-                                </div>
-
-                                <div className="trail-details-map">
-                                    <div className="trail-details-map-content">
-                                        <div
-                                            className="trail-details-map-icon"
-                                            aria-hidden="true"
-                                        >
-                                            <i className="bi bi-map" />
-                                        </div>
-
-                                        <h3>Explore the route</h3>
-
-                                        <p>
-                                            Open the trail route in your
-                                            preferred maps application.
-                                        </p>
-
-                                        <button
-                                            type="button"
-                                            className="trail-details-map-button"
-                                        >
-                                            <i
-                                                className="bi bi-box-arrow-up-right"
-                                                aria-hidden="true"
-                                            />
-                                            Open route map
-                                        </button>
-                                    </div>
-                                </div>
-                            </section> */}
                         </div>
 
                         {/* Sidebar */}
                         <aside className="trail-details-sidebar">
-
-                            {/* Could also implement later */}
-                            {/* <section className="trail-details-sidebar-card">
-                                <h2>Trail overview</h2>
-
-                                <dl className="trail-details-overview">
-                                    <div>
-                                        <dt>Route type</dt>
-                                        <dd>Loop</dd>
-                                    </div>
-
-                                    <div>
-                                        <dt>Highest point</dt>
-                                        <dd>2,535 m</dd>
-                                    </div>
-
-                                    <div>
-                                        <dt>Best season</dt>
-                                        <dd>June – October</dd>
-                                    </div>
-
-                                    <div>
-                                        <dt>Trail markings</dt>
-                                        <dd>Yes</dd>
-                                    </div>
-
-                                    <div>
-                                        <dt>Dogs allowed</dt>
-                                        <dd>Yes, on a leash</dd>
-                                    </div>
-                                </dl>
-                            </section> */}
 
                             <section className="trail-details-sidebar-card">
                                 <h2>Shared by</h2>

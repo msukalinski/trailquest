@@ -1,14 +1,14 @@
-import './CreateTrail.css'
-import CreateTrailForm from "../create-trail-form/CreateTrailForm";
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+
+import CreateTrailForm from "../create-trail-form/CreateTrailForm";
 import ErrorMessage from '../error-message/ErrorMessage';
-import { supabase } from '../../lib/supabase';
 import { createTrail } from '../../services/trailService';
+import './CreateTrail.css'
 
 export default function CreateTrail() {
     const navigate = useNavigate();
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
 
     const createTrailHandler = async (e) => {
         e.preventDefault();

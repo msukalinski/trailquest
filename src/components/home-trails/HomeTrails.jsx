@@ -2,9 +2,8 @@ import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 
 import HomeTrailCard from '../home-trail-card/HomeTrailCard';
-import { supabase } from '../../lib/supabase';
-import './HomeTrails.css'
 import { getLatestTrails } from '../../services/trailService';
+import './HomeTrails.css';
 
 export default function HomeTrails() {
 
@@ -32,12 +31,6 @@ export default function HomeTrails() {
                     <span className="ms-2">→</span>
                 </Link>
             </div>
-
-            {/* <div className="row g-4">
-                {trails.length === 0 && <h2>No trails added yet</h2>}
-
-                {trails.map(trail => <TrailCard key={trail.id} {...trail} />)}
-            </div> */}
 
             {trails.length > 0
                 ? (

@@ -26,7 +26,7 @@ export default function Register() {
         }
 
         if (!username) {
-            setError('Enter a username');
+            setError('Enter an username');
             return;
         }
 

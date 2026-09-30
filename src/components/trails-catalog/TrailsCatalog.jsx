@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
+import { getTrails } from "../../services/trailService";
+
 import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
 import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
-import { supabase } from "../../lib/supabase";
 import "./TrailsCatalog.css";
-import { getTrails } from "../../services/trailService";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
