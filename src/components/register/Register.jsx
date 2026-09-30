@@ -15,6 +15,7 @@ export default function Register() {
 
         const values = Object.fromEntries(new FormData(e.currentTarget));
         const email = values.email.trim();
+        const username = values.username.trim();
         const password = values.password;
 
         setError('');
@@ -24,12 +25,18 @@ export default function Register() {
             return;
         }
 
+        if (!username) {
+            setError('Enter a username');
+            return;
+        }
+
         setSubmitting(true);
 
         try {
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: { data: { username } }
             });
 
             if (error) {

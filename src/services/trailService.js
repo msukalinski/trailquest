@@ -63,9 +63,20 @@ export async function getTrailById(id) {
 }
 
 export async function createTrail(newTrail) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError) {
+        throw authError;
+    }
+
+    if (!user) {
+        throw new Error("Sign in to create trail");
+
+    }
+
     const { data, error } = await supabase
         .from('trails')
-        .insert(newTrail)
+        .insert({ ...newTrail, ownerId: user.id })
         .select()
         .single();
 

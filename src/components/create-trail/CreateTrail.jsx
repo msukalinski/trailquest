@@ -39,7 +39,7 @@ export default function CreateTrail() {
 
     return (
         <>
-            {error && <ErrorMessage {...error} />}
+            {error && <ErrorMessage message={error} />}
             <div className="create-trail-page">
 
                 {/* Hero */}

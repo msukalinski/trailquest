@@ -15,8 +15,6 @@ export default function TrailDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // const nameInitials = trail.ownerId?.firstName
-
 
     useEffect(() => {
         const controller = new AbortController();
@@ -50,11 +48,19 @@ export default function TrailDetails() {
     }, [trailId]);
 
     if (loading) return <Loader />;
-    if (error) return <ErrorMessage message={error.message} />;
+    if (error) return <ErrorMessage message={error} />;
     if (!trail) return <NotFound />;
 
-    const nameInitials = `${trail?.owner.firstName[0]}${trail?.owner.lastName[0]}`;
-    console.log(nameInitials);
+    // const nameInitials = `${trail?.owner.firstName[0]}${trail?.owner.lastName[0]}`;
+    // console.log(nameInitials);
+
+    const ownerName = [trail.owner?.firstName?.trim(), trail.owner?.lastName?.trim()]
+        .filter(Boolean)
+        .join(' ') || trail.owner?.username?.trim() || 'TrailQuest member';
+
+    const nameInitials = ownerName === 'TrailQuest member'
+        ? 'TQ'
+        : ownerName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 
     const deleteTrailHandler = async () => {
         const confirmed = window.confirm(`Are you sure you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
@@ -166,7 +172,7 @@ export default function TrailDetails() {
 
                             <div>
                                 <span>Shared by</span>
-                                <strong>{`${trail.owner.firstName} ${trail.owner.lastName}`}</strong>
+                                <strong>{ownerName}</strong>
                             </div>
                         </div>
 
@@ -444,7 +450,8 @@ export default function TrailDetails() {
                                     </div>
 
                                     <div>
-                                        <strong>{`${trail.owner.firstName} ${trail.owner.lastName}`}</strong>
+                                        <strong>{ownerName}</strong>
+                                        {!trail.owner && <span>Profile unavailable</span>}
                                         <span>Member since 2026</span>
                                     </div>
                                 </div>
