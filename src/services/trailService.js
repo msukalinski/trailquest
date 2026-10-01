@@ -26,6 +26,19 @@ export async function getTrails() {
     return data;
 }
 
+export async function getMyTrails(userId) {
+    const { data, error } = await supabase
+        .from('trails')
+        .select('*')
+        .eq('ownerId', userId);
+
+        if(error) {
+            throw error;
+        }
+
+        return data;
+}
+
 export async function getLatestTrails() {
     const { data, error } = await supabase
         .from('trails')

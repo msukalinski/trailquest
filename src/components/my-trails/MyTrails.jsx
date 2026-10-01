@@ -1,123 +1,32 @@
 import { Link } from "react-router";
 
 import './MyTrails.css'
-
-function MyTrailCard({
-    id,
-    image,
-    title,
-    location,
-    description,
-    distance,
-    difficulty,
-    difficultyClass,
-    status,
-    statusClass,
-    views,
-    favourites,
-}) {
-    return (
-        <article className="my-trail-card">
-            <div className="my-trail-image-wrapper">
-                <img
-                    src={image}
-                    alt={title}
-                    className="my-trail-image"
-                />
-
-                <span className={`my-trail-status ${statusClass}`}>
-                    {status}
-                </span>
-
-                <span
-                    className={`my-trail-difficulty ${difficultyClass}`}
-                >
-                    {difficulty}
-                </span>
-            </div>
-
-            <div className="my-trail-card-content">
-                <p className="my-trail-location">
-                    <i
-                        className="bi bi-geo-alt-fill"
-                        aria-hidden="true"
-                    />
-
-                    {location}
-                </p>
-
-                <h2>{title}</h2>
-
-                <p className="my-trail-description">
-                    {description}
-                </p>
-
-                <div className="my-trail-information">
-                    <span>
-                        <i
-                            className="bi bi-signpost-2"
-                            aria-hidden="true"
-                        />
-                        {distance}
-                    </span>
-
-                    <span>
-                        <i
-                            className="bi bi-eye"
-                            aria-hidden="true"
-                        />
-                        {views} views
-                    </span>
-
-                    <span>
-                        <i
-                            className="bi bi-heart"
-                            aria-hidden="true"
-                        />
-                        {favourites}
-                    </span>
-                </div>
-
-                <div className="my-trail-actions">
-                    <Link
-                        to={`/trails/${id}`}
-                        className="my-trail-view-button"
-                    >
-                        <i
-                            className="bi bi-eye"
-                            aria-hidden="true"
-                        />
-                        View
-                    </Link>
-
-                    <Link
-                        to={`/trails/${id}/edit`}
-                        className="my-trail-edit-button"
-                    >
-                        <i
-                            className="bi bi-pencil"
-                            aria-hidden="true"
-                        />
-                        Edit
-                    </Link>
-
-                    <button
-                        type="button"
-                        className="my-trail-delete-button"
-                    >
-                        <i
-                            className="bi bi-trash3"
-                            aria-hidden="true"
-                        />
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </article>
-    );
-}
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../context/UserContext";
+import { getMyTrails } from "../../services/trailService";
+import MyTrailsCard from "../my-trails-card/MyTrailsCard";
 
 export default function MyTrails() {
+    const [trails, setTrails] = useState([]);
+    const { user, initializing } = useContext(UserContext);
+    const userId = user?.id;
+
+    useEffect(() => {
+        const loadUserTrails = async () => {
+            try {
+                const data = await getMyTrails(userId);
+                console.log(data);
+                setTrails(data);
+            } catch (err) {
+                console.error('Error fetching trails', err.message);
+            }
+        }
+
+        if (initializing || !userId) return;
+
+        loadUserTrails();
+    }, [initializing, userId]);
+
     return (
         <div className="my-trails-page">
 
@@ -142,10 +51,7 @@ export default function MyTrails() {
                             to="/trails/create"
                             className="my-trails-create-button btn"
                         >
-                            <i
-                                className="bi bi-plus-lg me-2"
-                                aria-hidden="true"
-                            />
+                            <i className="bi bi-plus-lg me-2" aria-hidden="true" />
                             Create new trail
                         </Link>
                     </div>
@@ -158,10 +64,7 @@ export default function MyTrails() {
                     <div className="my-trails-statistics">
                         <div className="my-trails-statistic">
                             <div className="my-trails-statistic-icon green">
-                                <i
-                                    className="bi bi-signpost-split"
-                                    aria-hidden="true"
-                                />
+                                <i className="bi bi-signpost-split" aria-hidden="true" />
                             </div>
 
                             <div>
@@ -172,10 +75,7 @@ export default function MyTrails() {
 
                         <div className="my-trails-statistic">
                             <div className="my-trails-statistic-icon orange">
-                                <i
-                                    className="bi bi-cloud-check"
-                                    aria-hidden="true"
-                                />
+                                <i className="bi bi-cloud-check" aria-hidden="true" />
                             </div>
 
                             <div>
@@ -186,10 +86,7 @@ export default function MyTrails() {
 
                         <div className="my-trails-statistic">
                             <div className="my-trails-statistic-icon blue">
-                                <i
-                                    className="bi bi-file-earmark-text"
-                                    aria-hidden="true"
-                                />
+                                <i className="bi bi-file-earmark-text" aria-hidden="true" />
                             </div>
 
                             <div>
@@ -200,10 +97,7 @@ export default function MyTrails() {
 
                         <div className="my-trails-statistic">
                             <div className="my-trails-statistic-icon red">
-                                <i
-                                    className="bi bi-heart"
-                                    aria-hidden="true"
-                                />
+                                <i className="bi bi-heart" aria-hidden="true" />
                             </div>
 
                             <div>
@@ -228,14 +122,8 @@ export default function MyTrails() {
                         </div>
 
                         <div className="my-trails-toolbar-controls">
-                            <div
-                                className="my-trails-filter-buttons"
-                                aria-label="Filter trails"
-                            >
-                                <button
-                                    type="button"
-                                    className="active"
-                                >
+                            <div className="my-trails-filter-buttons" aria-label="Filter trails">
+                                <button type="button" className="active">
                                     All
                                 </button>
 
@@ -248,11 +136,7 @@ export default function MyTrails() {
                                 </button>
                             </div>
 
-                            <select
-                                className="form-select"
-                                aria-label="Sort trails"
-                                defaultValue="newest"
-                            >
+                            <select className="form-select" aria-label="Sort trails" defaultValue="newest">
                                 <option value="newest">
                                     Newest first
                                 </option>
@@ -269,7 +153,7 @@ export default function MyTrails() {
                     </div>
 
                     <div className="my-trails-grid">
-                        <MyTrailCard
+                        <MyTrailsCard
                             id="1"
                             image="/images/seven-rila-lakes.jpg"
                             title="Seven Rila Lakes"
@@ -282,36 +166,6 @@ export default function MyTrails() {
                             statusClass="published"
                             views="1,248"
                             favourites="156"
-                        />
-
-                        <MyTrailCard
-                            id="2"
-                            image="/images/musala-peak.jpg"
-                            title="Musala Peak"
-                            location="Rila Mountain, Bulgaria"
-                            description="A challenging climb to the highest summit in Bulgaria and the Balkan Peninsula."
-                            distance="14 km"
-                            difficulty="Moderate"
-                            difficultyClass="moderate"
-                            status="Published"
-                            statusClass="published"
-                            views="984"
-                            favourites="128"
-                        />
-
-                        <MyTrailCard
-                            id="3"
-                            image="/images/vitosha-golden-bridges.jpg"
-                            title="Vitosha Golden Bridges"
-                            location="Vitosha Mountain, Bulgaria"
-                            description="A peaceful forest trail leading to Vitosha's impressive stone river."
-                            distance="8 km"
-                            difficulty="Easy"
-                            difficultyClass="easy"
-                            status="Draft"
-                            statusClass="draft"
-                            views="0"
-                            favourites="0"
                         />
                     </div>
                 </div>
