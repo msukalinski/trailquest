@@ -1,17 +1,19 @@
 import { Link, useNavigate } from "react-router";
 import { supabase } from "../../lib/supabase";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import './Header.css'
+import { UserContext } from "../../context/UserContext";
 
 export default function Header() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const { user, initializing } = useContext(UserContext);
 
     const logoutHandler = async () => {
-        const {error} = await supabase.auth.signOut();
+        const { error } = await supabase.auth.signOut();
 
-        if(error) {
+        if (error) {
             setError(error.message);
         }
 
@@ -44,58 +46,51 @@ export default function Header() {
                     <span className="navbar-toggler-icon" />
                 </button>
 
-                <div
-                    className="collapse navbar-collapse"
-                    id="mainNavigation"
-                >
+                <div className="collapse navbar-collapse" id="mainNavigation">
                     <ul className="navbar-nav mx-auto gap-lg-4">
                         <li className="nav-item">
-                            <Link
-                                to="/"
-                                className="nav-link active fw-semibold border-bottom border-2"
-                            >
+                            <Link to="/" className="nav-link active fw-semibold border-bottom border-2">
                                 Home
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                to="/trails"
-                                className="nav-link text-dark"
-                            >
+                            <Link to="/trails" className="nav-link text-dark">
                                 Explore
                             </Link>
                         </li>
 
-                        <li className="nav-item">
-                            <Link
-                                to="/my-trails"
-                                className="nav-link text-dark"
-                            >
-                                My Trails
-                            </Link>
-                        </li>
+                        {!initializing && user && (
+                            <li className="nav-item">
+                                <Link to="/my-trails" className="nav-link text-dark">
+                                    My Trails
+                                </Link>
+                            </li>
+                        )}
                     </ul>
 
                     <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-                        <Link
-                            to="/login"
-                            className="text-decoration-none text-dark"
-                        >
-                            Sign in
-                        </Link>
+                        {!initializing && (
+                            user ? (
+                                <>
+                                    <Link to="/trails/create" className="btn text-white px-4 py-2 rounded-3">
+                                        Share a trail
+                                    </Link>
 
-                        <Link
-                            to="/trails/create"
-                            className="btn text-white px-4 py-2 rounded-3"
-                        >
-                            Share a trail
-                        </Link>
+                                    <button
+                                        type="button"
+                                        className="btn text-white px-3 py-2 rounded-3"
+                                        onClick={logoutHandler}>
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <Link to="/login" className="btn text-white px-3 py-2 rounded-3">
+                                    Sign in
+                                </Link>
+                            )
+                        )}
 
-                        <button
-                            type="button"
-                            className="btn text-white px-3 py-2 rounded-3"
-                            onClick={logoutHandler}>Logout</button>
                     </div>
                 </div>
             </nav>

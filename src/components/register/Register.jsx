@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 import './Register.css'
 import RegisterForm from "../register-form/RegisterForm";
