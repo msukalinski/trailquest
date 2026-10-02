@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export default function MyTrailsCard({
     id,
-    image,
+    imageUrl,
     title,
     location,
     description,
@@ -18,7 +18,7 @@ export default function MyTrailsCard({
         <article className="my-trail-card">
             <div className="my-trail-image-wrapper">
                 <img
-                    src={image}
+                    src={imageUrl}
                     alt={title}
                     className="my-trail-image"
                 />
@@ -28,7 +28,7 @@ export default function MyTrailsCard({
                 </span>
 
                 <span
-                    className={`my-trail-difficulty ${difficultyClass}`}
+                    className={`my-trail-difficulty ${difficulty?.toLowerCase()}`}
                 >
                     {difficulty}
                 </span>
@@ -65,7 +65,7 @@ export default function MyTrailsCard({
 
                 <div className="my-trail-actions">
                     <Link
-                        to={`/trails/${id}`}
+                        to={`/trails/${id}/details`}
                         className="my-trail-view-button"
                     >
                         <i className="bi bi-eye" aria-hidden="true" />

@@ -1,28 +1,43 @@
 import { Link } from "react-router";
 
-import './MyTrails.css'
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import { getMyTrails } from "../../services/trailService";
 import MyTrailsCard from "../my-trails-card/MyTrailsCard";
 
+import './MyTrails.css'
+import Loader from "../loader/Loader";
+import ErrorMessage from "../error-message/ErrorMessage";
+
 export default function MyTrails() {
     const [trails, setTrails] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const { user, initializing } = useContext(UserContext);
     const userId = user?.id;
 
     useEffect(() => {
         const loadUserTrails = async () => {
+            setLoading(true);
+            setError('');
+
             try {
                 const data = await getMyTrails(userId);
-                console.log(data);
                 setTrails(data);
             } catch (err) {
-                console.error('Error fetching trails', err.message);
+                setError(err.message || 'Could not load your trails.');
+            } finally {
+                setLoading(false)
             }
         }
 
-        if (initializing || !userId) return;
+        if (initializing) return;
+
+        if (!userId) {
+            setTrails([]);
+            setLoading(false);
+            return;
+        }
 
         loadUserTrails();
     }, [initializing, userId]);
@@ -68,7 +83,7 @@ export default function MyTrails() {
                             </div>
 
                             <div>
-                                <strong>3</strong>
+                                <strong>{trails.length}</strong>
                                 <span>Total trails</span>
                             </div>
                         </div>
@@ -153,20 +168,15 @@ export default function MyTrails() {
                     </div>
 
                     <div className="my-trails-grid">
-                        <MyTrailsCard
-                            id="1"
-                            image="/images/seven-rila-lakes.jpg"
-                            title="Seven Rila Lakes"
-                            location="Rila Mountain, Bulgaria"
-                            description="A circular mountain route passing through the famous glacial lakes of Rila."
-                            distance="17 km"
-                            difficulty="Hard"
-                            difficultyClass="hard"
-                            status="Published"
-                            statusClass="published"
-                            views="1,248"
-                            favourites="156"
-                        />
+                        {loading ? (
+                            <Loader />
+                        ) : error ? (
+                            <ErrorMessage message={error} />
+                        ) : trails.length === 0 ? (
+                            <strong>You haven't created any trails yet.</strong>
+                        ) : (
+                            trails.map(trail => <MyTrailsCard key={trail.id} {...trail} />)
+                        )}
                     </div>
                 </div>
             </section>
