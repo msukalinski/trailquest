@@ -32,11 +32,11 @@ export async function getMyTrails(userId) {
         .select('*')
         .eq('ownerId', userId);
 
-        if(error) {
-            throw error;
-        }
+    if (error) {
+        throw error;
+    }
 
-        return data;
+    return data;
 }
 
 export async function getLatestTrails() {
@@ -98,6 +98,25 @@ export async function createTrail(newTrail) {
     }
 
     return data;
+}
+
+export async function updateTrail(trailId, change) {
+    const { data: updatedTrail, error } = await supabase
+        .from('trails')
+        .update({ ...change })
+        .eq('id', trailId)
+        .select('id')
+        .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    if(!updatedTrail) {
+        throw new Error('Trail not found or you cannot edit it.');
+    }
+
+    return updatedTrail;
 }
 
 export async function deleteTrail(id) {

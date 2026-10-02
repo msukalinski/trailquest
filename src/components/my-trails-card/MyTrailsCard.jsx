@@ -1,5 +1,7 @@
 import { Link } from "react-router";
 
+import './MyTrailsCard.css';
+
 export default function MyTrailsCard({
     id,
     imageUrl,

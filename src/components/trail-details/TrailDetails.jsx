@@ -316,7 +316,7 @@ export default function TrailDetails() {
                                 <p>Owner controls</p>
 
                                 <Link
-                                    to="/trails/1/edit"
+                                    to={`/trails/${trail.id}/edit`}
                                     className="trail-details-edit-button"
                                 >
                                     <i
