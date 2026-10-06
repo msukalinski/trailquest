@@ -4,11 +4,25 @@ export default function EditTrailForm({
     trail,
     onEdit,
     submitting,
+    submitted = false,
+    errors = {},
+    touched = {},
+    onFieldBlur,
 }) {
+    const getFieldClass = (name, baseClass) => {
+        return `${baseClass} ${(touched[name] || submitted) && errors[name] ? 'is-invalid' : ''}`;
+    }
 
+    const showFieldError = (name) => {
+        return (touched[name] || submitted) && errors[name] ? (
+            <div className="invalid-feedback d-block" role="alert">
+                {errors[name]}
+            </div>
+        ) : null;
+    }
 
     return (
-        <form className="create-trail-form" onSubmit={onEdit}>
+        <form className="create-trail-form" onSubmit={onEdit} onBlur={onFieldBlur} noValidate>
             <section className="create-form-section">
                 <div className="create-section-heading">
                     <div className="create-section-icon" aria-hidden="true">
@@ -30,10 +44,11 @@ export default function EditTrailForm({
                             id="edit-trail-title"
                             name="title"
                             type="text"
-                            className="form-control"
+                            className={getFieldClass('title', 'form-control')}
                             defaultValue={trail.title ?? ''}
                             required
                         />
+                        {showFieldError('title')}
                     </div>
 
                     <div className="col-md-7">
@@ -46,10 +61,11 @@ export default function EditTrailForm({
                                 id="edit-trail-location"
                                 name="location"
                                 type="text"
-                                className="form-control"
+                                className={getFieldClass('location', 'form-control')}
                                 defaultValue={trail.location ?? ''}
                                 required
                             />
+                            {showFieldError('location')}
                         </div>
                     </div>
 
@@ -95,7 +111,7 @@ export default function EditTrailForm({
                         <select
                             id="edit-trail-difficulty"
                             name="difficulty"
-                            className="form-select"
+                            className={getFieldClass('difficulty', 'form-select')}
                             defaultValue={trail.difficulty ?? ''}
                             required
                         >
@@ -104,6 +120,7 @@ export default function EditTrailForm({
                             <option value="Moderate">Moderate</option>
                             <option value="Hard">Hard</option>
                         </select>
+                        {showFieldError('difficulty')}
                     </div>
 
                     <div className="col-md-6">
@@ -117,11 +134,12 @@ export default function EditTrailForm({
                                 type="number"
                                 min="0"
                                 step="0.1"
-                                className="form-control"
+                                className={getFieldClass('distance', 'form-control')}
                                 defaultValue={trail.distance ?? ''}
                                 required
                             />
                             <span>km</span>
+                            {showFieldError('distance')}
                         </div>
                     </div>
 
@@ -136,10 +154,11 @@ export default function EditTrailForm({
                                 type="number"
                                 min="0"
                                 step="0.5"
-                                className="form-control"
+                                className={getFieldClass('duration', 'form-control')}
                                 defaultValue={trail.duration ?? ''}
                                 required
                             />
+                            {showFieldError('duration')}
                             <span>hours</span>
                         </div>
                     </div>
@@ -154,9 +173,10 @@ export default function EditTrailForm({
                                 name="elevation"
                                 type="number"
                                 min="0"
-                                className="form-control"
+                                className={getFieldClass('elevation', 'form-control')}
                                 defaultValue={trail.elevation ?? ''}
                             />
+                            {showFieldError('elevation')}
                             <span>metres</span>
                         </div>
                     </div>
@@ -184,10 +204,11 @@ export default function EditTrailForm({
                         id="edit-trail-image"
                         name="imageUrl"
                         type="url"
-                        className="form-control"
+                        className={getFieldClass('imageUrl', 'form-control')}
                         defaultValue={trail.imageUrl ?? ''}
                         required
                     />
+                    {showFieldError('imageUrl')}
                 </div>
             </section>
 
@@ -209,11 +230,12 @@ export default function EditTrailForm({
                 <textarea
                     id="edit-trail-description"
                     name="description"
-                    className="form-control create-description"
+                    className={getFieldClass('description', 'form-control create-description')}
                     rows="7"
                     defaultValue={trail.description ?? ''}
                     required
                 />
+                {showFieldError('description')}
             </section>
 
             <div className="create-form-actions">

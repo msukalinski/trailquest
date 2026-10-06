@@ -236,7 +236,9 @@ export default function TrailDetails() {
                                     <i className="bi bi-graph-up-arrow" aria-hidden="true" />
                                     <div>
                                         <span>Elevation</span>
-                                        <strong>{trail.elevation} m</strong>
+                                        <strong>{trail.elevation == null
+                                            ? 'Elevation not provided'
+                                            : `${trail.elevation} m`}</strong>
                                     </div>
                                 </div>
 

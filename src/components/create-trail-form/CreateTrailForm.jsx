@@ -3,10 +3,26 @@ import { Link } from "react-router";
 import './CreateTrailForm.css'
 
 export default function CreateTrailForm({
-    onCreate
+    onCreate,
+    errors = {},
+    touched = {},
+    submitted = false,
+    onFieldBlur,
 }) {
+    const getFieldClass = (name, baseClass) => {
+        return `${baseClass} ${(touched[name] || submitted) && errors[name] ? 'is-invalid' : ''}`;
+    }
+
+    const showFieldError = (name) => {
+        return (touched[name] || submitted) && errors[name] ? (
+            <div className="invalid-feedback d-block" role="alert">
+                {errors[name]}
+            </div>
+        ) : null;
+    }
+
     return (
-        <form className="create-trail-form" onSubmit={onCreate}>
+        <form className="create-trail-form" onSubmit={onCreate} onBlur={onFieldBlur} noValidate>
             {/* Basic information */}
             <section className="create-form-section">
                 <div className="create-section-heading">
@@ -34,9 +50,10 @@ export default function CreateTrailForm({
                             type="text"
                             id="trail-title"
                             name="title"
-                            className="form-control"
+                            className={getFieldClass('title', 'form-control')}
                             placeholder="For example: Seven Rila Lakes"
                         />
+                        {showFieldError('title')}
                     </div>
 
                     <div className="col-md-7">
@@ -52,9 +69,10 @@ export default function CreateTrailForm({
                                 type="text"
                                 id="trail-location"
                                 name="location"
-                                className="form-control"
+                                className={getFieldClass('location', 'form-control')}
                                 placeholder="Rila Mountain, Bulgaria"
                             />
+                            {showFieldError('location')}
                         </div>
                     </div>
 
@@ -68,6 +86,7 @@ export default function CreateTrailForm({
                             name="region"
                             className="form-select"
                             defaultValue=""
+
                         >
                             <option value="" disabled>
                                 Select region
@@ -124,7 +143,7 @@ export default function CreateTrailForm({
                         <select
                             id="trail-difficulty"
                             name="difficulty"
-                            className="form-select"
+                            className={getFieldClass('difficulty', 'form-select')}
                             defaultValue=""
                         >
                             <option value="" disabled>
@@ -143,6 +162,7 @@ export default function CreateTrailForm({
                                 Hard
                             </option>
                         </select>
+                        {showFieldError('difficulty')}
                     </div>
 
                     <div className="col-md-6">
@@ -156,11 +176,12 @@ export default function CreateTrailForm({
                                 type="number"
                                 id="trail-distance"
                                 name="distance"
-                                className="form-control"
+                                className={getFieldClass('distance', 'form-control')}
                                 placeholder="17"
                                 min="0"
                                 step="0.1"
                             />
+                            {showFieldError('distance')}
 
                             <span>km</span>
                         </div>
@@ -177,11 +198,12 @@ export default function CreateTrailForm({
                                 type="number"
                                 id="trail-duration"
                                 name="duration"
-                                className="form-control"
+                                className={getFieldClass('duration', 'form-control')}
                                 placeholder="6"
                                 min="0"
                                 step="0.5"
                             />
+                            {showFieldError('duration')}
 
                             <span>hours</span>
                         </div>
@@ -197,10 +219,11 @@ export default function CreateTrailForm({
                                 type="number"
                                 id="trail-elevation"
                                 name="elevation"
-                                className="form-control"
+                                className={getFieldClass('elevation', 'form-control')}
                                 placeholder="550"
                                 min="0"
                             />
+                            {showFieldError('elevation')}
 
                             <span>metres</span>
                         </div>
@@ -208,7 +231,7 @@ export default function CreateTrailForm({
                 </div>
             </section>
 
-            {/* Images and map */}
+            {/* Image */}
             <section className="create-form-section">
                 <div className="create-section-heading">
                     <div className="create-section-icon" aria-hidden="true">
@@ -235,9 +258,10 @@ export default function CreateTrailForm({
                                 type="url"
                                 id="trail-image"
                                 name="imageUrl"
-                                className="form-control"
+                                className={getFieldClass('imageUrl', 'form-control')}
                                 placeholder="https://example.com/trail-image.jpg"
                             />
+                            {showFieldError('imageUrl')}
                         </div>
 
                         <p className="create-field-hint">Use a direct link to a landscape image of the trail.</p>
@@ -266,10 +290,11 @@ export default function CreateTrailForm({
                 <textarea
                     id="trail-description"
                     name="description"
-                    className="form-control create-description"
+                    className={getFieldClass('description', 'form-control create-description')}
                     placeholder="Describe the starting point, route conditions, landmarks and anything hikers should prepare for..."
                     rows="7"
                 />
+                {showFieldError('description')}
 
                 <p className="create-field-hint">A useful description should include the terrain, trail markings and any difficult sections.
                 </p>

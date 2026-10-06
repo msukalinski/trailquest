@@ -5,25 +5,51 @@ import CreateTrailForm from "../create-trail-form/CreateTrailForm";
 import ErrorMessage from '../error-message/ErrorMessage';
 import { createTrail } from '../../services/trailService';
 import './CreateTrail.css'
+import { validateTrail } from '../../validation/validateTrail';
 
 export default function CreateTrail() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleFieldBlur = (e) => {
+        const name = e.target.name;
+        
+        if (!name) {
+            return;
+        }
+
+        setTouched(current => ({ ...current, [name]: true }));
+
+        const values = Object.fromEntries(new FormData(e.target.form));
+        setFieldErrors(validateTrail(values));
+    }
 
     const createTrailHandler = async (e) => {
         e.preventDefault();
         setError('');
 
-        const formData = new FormData(e.currentTarget);
+        const values = Object.fromEntries(new FormData(e.currentTarget));
 
-        const values = Object.fromEntries(formData);
+        setSubmitted(true);
 
+        const validationErrors = validateTrail(values);
+        setFieldErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length > 0) {
+            console.log(validationErrors);
+            return;
+        }
 
         const newTrail = {
             ...values,
             distance: Number(values.distance),
             duration: Number(values.duration),
-            elevation: Number(values.elevation),
+            elevation: values.elevation.trim() === ''
+                ? null
+                : Number(values.elevation),
         }
 
         try {
@@ -60,7 +86,13 @@ export default function CreateTrail() {
                         <div className="create-trail-layout">
 
                             {/* Form */}
-                            <CreateTrailForm onCreate={createTrailHandler} />
+                            <CreateTrailForm
+                                onCreate={createTrailHandler}
+                                errors={fieldErrors}
+                                touched={touched}
+                                submitted={submitted}
+                                onFieldBlur={handleFieldBlur}
+                            />
 
                             {/* Sidebar */}
                             <aside className="create-trail-sidebar">

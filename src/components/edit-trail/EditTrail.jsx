@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 
-import { getTrailById, updateTrail } from '../../services/trailService';
-import EditTrailForm from '../edit-trail-form/EditTrailForm';
 import Loader from '../loader/Loader';
+import EditTrailForm from '../edit-trail-form/EditTrailForm';
 import ErrorMessage from '../error-message/ErrorMessage';
+
+import { getTrailById, updateTrail } from '../../services/trailService';
+import { validateTrail } from '../../validation/validateTrail';
 
 import '../create-trail/CreateTrail.css';
 import './EditTrail.css';
@@ -16,6 +18,9 @@ export default function EditTrail() {
     const [trail, setTrail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
+    const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -48,18 +53,43 @@ export default function EditTrail() {
         return () => controller.abort();
     }, [trailId]);
 
+    const handleFieldBlur = (e) => {
+        const name = e.target.name;
+
+        if (!name) {
+            return;
+        }
+
+        setTouched(current => ({ ...current, [name]: true }));
+
+        const values = Object.fromEntries(new FormData(e.target.form));
+        setFieldErrors(validateTrail(values));
+    }
+
     const editTrailHandler = async (e) => {
         e.preventDefault();
         setError('');
-        setSubmitting(true);
+        setSubmitted(true);
 
         const values = Object.fromEntries(new FormData(e.currentTarget));
+
+        const validationErrors = validateTrail(values);
+        setFieldErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length > 0) {
+            return;
+        }
+
         const changes = {
             ...values,
             distance: Number(values.distance),
             duration: Number(values.duration),
-            elevation: Number(values.elevation),
+            elevation: values.elevation.trim() === ''
+                ? null
+                : Number(values.elevation),
         }
+
+        setSubmitting(true);
 
         try {
             const editedTrail = await updateTrail(trailId, changes);
@@ -88,18 +118,23 @@ export default function EditTrail() {
 
             <section className="create-trail-content">
                 <div className="container">
+                    {!loading && error && <ErrorMessage message={error} />}
                     <div className="create-trail-layout">
                         {loading ? (
                             <Loader />
-                        ) : error ? (
-                            <ErrorMessage message={error} />
                         ) : trail ? (
-                            <EditTrailForm trail={trail} onEdit={editTrailHandler} submitting={submitting} />
-                        ) : (
+                            <EditTrailForm
+                                trail={trail}
+                                onEdit={editTrailHandler}
+                                submitting={submitting}
+                                submitted={submitted}
+                                errors={fieldErrors}
+                                touched={touched}
+                                onFieldBlur={handleFieldBlur}
+                            />
+                        ) : !error ? (
                             <strong>Trail not found</strong>
-                        )
-                        }
-                        {/* <EditTrailForm onEdit={editTrailHandler} trail={trailData} /> */}
+                        ) : null}
 
                         <aside className="create-trail-sidebar">
                             <section className="create-sidebar-card">
