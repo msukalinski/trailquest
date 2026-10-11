@@ -6,7 +6,6 @@ import EditTrailForm from '../edit-trail-form/EditTrailForm';
 import ErrorMessage from '../error-message/ErrorMessage';
 
 import { getTrailById, updateTrail } from '../../services/trailService';
-import { validateTrail } from '../../validation/validateTrail';
 
 import '../create-trail/CreateTrail.css';
 import './EditTrail.css';
@@ -14,94 +13,39 @@ import './EditTrail.css';
 export default function EditTrail() {
     const { trailId } = useParams();
     const navigate = useNavigate();
+    const [loadResult, setLoadResult] = useState(null);
 
-    const [trail, setTrail] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [fieldErrors, setFieldErrors] = useState({});
-    const [touched, setTouched] = useState({});
-    const [submitted, setSubmitted] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
+    const { trail, loadError } = loadResult ?? {};
+    const loading = loadResult?.trailId !== trailId;
 
     useEffect(() => {
         const controller = new AbortController();
 
         const loadTrail = async () => {
-            setTrail(null);
-            setLoading(true);
-            setError('');
-
             try {
-                const data = await getTrailById(trailId);
+                const data = await getTrailById(trailId, controller.signal);
 
                 if (!controller.signal.aborted) {
-                    setTrail(data);
+                    setLoadResult({ trailId, trail: data });
                 }
             } catch (err) {
                 if (!controller.signal.aborted) {
-                    console.error(err);
-                    setError('Could not load this trail');
-                }
-            } finally {
-                if (!controller.signal.aborted) {
-                    setLoading(false);
+                    setLoadResult({
+                        trailId,
+                        loadError: err?.message || 'Could not load this trail.',
+                    });
                 }
             }
-        }
+        };
+
         loadTrail();
 
         return () => controller.abort();
     }, [trailId]);
 
-    const handleFieldBlur = (e) => {
-        const name = e.target.name;
-
-        if (!name) {
-            return;
-        }
-
-        setTouched(current => ({ ...current, [name]: true }));
-
-        const values = Object.fromEntries(new FormData(e.target.form));
-        setFieldErrors(validateTrail(values));
-    }
-
-    const editTrailHandler = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSubmitted(true);
-
-        const values = Object.fromEntries(new FormData(e.currentTarget));
-
-        const validationErrors = validateTrail(values);
-        setFieldErrors(validationErrors);
-
-        if (Object.keys(validationErrors).length > 0) {
-            return;
-        }
-
-        const changes = {
-            ...values,
-            distance: Number(values.distance),
-            duration: Number(values.duration),
-            elevation: values.elevation.trim() === ''
-                ? null
-                : Number(values.elevation),
-        }
-
-        setSubmitting(true);
-
-        try {
-            const editedTrail = await updateTrail(trailId, changes);
-            navigate(`/trails/${editedTrail.id}/details`);
-            console.log(editedTrail);
-        } catch (err) {
-            console.error('Edit trail error', err.message);
-            setError(err.message);
-            return;
-        } finally {
-            setSubmitting(false);
-        }
+    const editTrailHandler = async (changes) => {
+        const editedTrail = await updateTrail(trailId, changes);
+        navigate(`/trails/${editedTrail.id}/details`);
     }
 
     return (
@@ -118,23 +62,19 @@ export default function EditTrail() {
 
             <section className="create-trail-content">
                 <div className="container">
-                    {!loading && error && <ErrorMessage message={error} />}
+                    {!loading && loadError && <ErrorMessage message={loadError} />}
                     <div className="create-trail-layout">
                         {loading ? (
                             <Loader />
                         ) : trail ? (
                             <EditTrailForm
+                                key={trailId}
                                 trail={trail}
                                 onEdit={editTrailHandler}
-                                submitting={submitting}
-                                submitted={submitted}
-                                errors={fieldErrors}
-                                touched={touched}
-                                onFieldBlur={handleFieldBlur}
                             />
-                        ) : !error ? (
-                            <strong>Trail not found</strong>
-                        ) : null}
+                        ) : (
+                            <p role='status'>Trail not found.</p>
+                        )}
 
                         <aside className="create-trail-sidebar">
                             <section className="create-sidebar-card">

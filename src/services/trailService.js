@@ -1,11 +1,17 @@
 import { supabase } from "../lib/supabase";
 
-export async function getProfile(userId) {
-    const { data, error } = await supabase
+export async function getProfile(userId, signal) {
+    const query = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
+
+    if (signal) {
+        query.abortSignal(signal);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         throw error;
@@ -53,12 +59,18 @@ export async function getLatestTrails() {
     return data;
 }
 
-export async function getTrailById(id) {
-    const { data, error } = await supabase
+export async function getTrailById(id, signal) {
+    const query = supabase
         .from('trails')
         .select('*')
         .eq('id', id)
         .maybeSingle();
+
+    if (signal) {
+        query.abortSignal(signal);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         throw error;
@@ -69,7 +81,7 @@ export async function getTrailById(id) {
     }
 
     const owner = data.ownerId
-        ? await getProfile(data.ownerId)
+        ? await getProfile(data.ownerId, signal)
         : null;
 
     return { ...data, owner };
@@ -83,7 +95,7 @@ export async function createTrail(newTrail) {
     }
 
     if (!user) {
-        throw new Error("Sign in to create trail");
+        throw new Error("Sign in to create trail.");
 
     }
 
@@ -112,7 +124,7 @@ export async function updateTrail(trailId, change) {
         throw error;
     }
 
-    if(!updatedTrail) {
+    if (!updatedTrail) {
         throw new Error('Trail not found or you cannot edit it.');
     }
 
@@ -134,7 +146,7 @@ export async function deleteTrail(id) {
     }
 
     if (!data) {
-        throw new Error("Trail was not found pr you cannot delete it");
+        throw new Error("Trail was not found or you cannot delete it.");
     }
 
     return data;
