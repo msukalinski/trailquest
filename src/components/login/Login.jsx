@@ -3,41 +3,45 @@ import { useState } from "react";
 import { supabase } from "../../lib/supabase";
 
 import LoginForm from "../login-form/LoginForm";
-import './Login.css'
+import useForm from "../../hooks/useForm";
+import { login } from "../../services/userService";
+
+import './Login.css';
 
 export default function Login() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
-    const [submitting, setSubmitting] = useState('');
 
-    const loginSubmitHandler = async (e) => {
-        e.preventDefault();
-
-        const values = Object.fromEntries(new FormData(e.currentTarget));
-        const email = values.email.trim();
-        const password = values.password;
-
+    const loginSubmitHandler = async ({ email, password }) => {
         setError('');
-        setSubmitting(true);
+        const trimmedEmail = email.trim();
+
+        if (!trimmedEmail || !password) {
+            setError('Email and password are required!');
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+            setError('Enter a valid email address.');
+            return;
+        }
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
+            await login({
+                email: trimmedEmail,
                 password
             });
 
-            if (error) {
-                setError(error.message);
-                return;
-            }
-
             navigate('/');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Login failed');
-        } finally {
-            setSubmitting(false);
+            setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
         }
-    }
+    };
+
+    const { register, formAction } = useForm(
+        loginSubmitHandler,
+        { email: '', password: '' }
+    );
 
     return (
         <div className="login-page">
@@ -78,9 +82,9 @@ export default function Login() {
 
                     {/* Form section */}
                     <LoginForm
-                        onSubmit={loginSubmitHandler}
+                        formAction={formAction}
+                        register={register}
                         error={error}
-                        submitting={submitting}
                     />
                 </div>
             </div>
