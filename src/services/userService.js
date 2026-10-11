@@ -6,8 +6,22 @@ export async function login({ email, password }) {
         password
     });
 
-    if(error) {
-        throw(error);
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
+export async function registerUser({ username, email, password }) {
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { username } },
+    });
+
+    if (error) {
+        throw error;
     }
 
     return data;

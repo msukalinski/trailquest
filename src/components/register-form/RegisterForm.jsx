@@ -1,10 +1,116 @@
+import { useFormStatus } from "react-dom";
 import { Link } from "react-router";
 
+function RegisterFormContent({ register, error }) {
+    const { pending } = useFormStatus();
+
+    return (
+        <>
+            {!pending && error && (
+                <p className="alert alert-danger" role="alert">
+                    {error}
+                </p>
+            )}
+
+
+            <fieldset className="border-0 p-0 m-0" disabled={pending} aria-busy={pending}>
+                <div className="mb-3">
+                    <label htmlFor="username" className="form-label">
+                        Username
+                    </label>
+
+                    <div className="register-input-wrapper">
+                        <i className="bi bi-person" aria-hidden="true" />
+
+                        <input
+                            type="text"
+                            id="username"
+                            {...register('username')}
+                            className="form-control"
+                            placeholder="Choose a username"
+                            autoComplete="username"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="register-email" className="form-label">
+                        Email address
+                    </label>
+
+                    <div className="register-input-wrapper">
+                        <i className="bi bi-envelope" aria-hidden="true" />
+
+                        <input
+                            type="email"
+                            id="register-email"
+                            {...register('email')}
+                            className="form-control"
+                            placeholder="you@example.com"
+                            autoComplete="email"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="register-password" className="form-label">
+                        Password
+                    </label>
+
+                    <div className="register-input-wrapper">
+                        <i className="bi bi-lock" aria-hidden="true" />
+
+                        <input
+                            type="password"
+                            id="register-password"
+                            {...register('password')}
+                            className="form-control"
+                            placeholder="Create a password"
+                            autoComplete="new-password"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="confirm-password" className="form-label">
+                        Confirm password
+                    </label>
+
+                    <div className="register-input-wrapper">
+                        <i className="bi bi-shield-lock" aria-hidden="true" />
+
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            {...register('confirmPassword')}
+                            className="form-control"
+                            placeholder="Repeat your password"
+                            autoComplete="new-password"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    className="register-submit-button btn w-100"
+                    disabled={pending}
+                >
+                    {pending ? 'Creating account…' : 'Register'}
+                    <i className="bi bi-arrow-right ms-2" aria-hidden="true" />
+                </button>
+            </fieldset>
+        </>
+    )
+}
+
 export default function RegisterForm({
-    onSubmit,
+    formAction,
+    register,
     error,
-    success,
-    submitting
 }) {
     return (
         <section className="register-form-section col-lg-6">
@@ -26,134 +132,11 @@ export default function RegisterForm({
                     </p>
                 </div>
 
-                <form className="register-form" onSubmit={onSubmit}>
-                    {error && <p role="alert">{error}</p>}
-                    {success && <p role="status">{success}</p>}
-                    {/* Username */}
-                    <div className="mb-3">
-                        <label
-                            htmlFor="username"
-                            className="form-label"
-                        >
-                            Username
-                        </label>
-
-                        <div className="register-input-wrapper">
-                            <i className="bi bi-person" aria-hidden="true" />
-
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                className="form-control"
-                                placeholder="Choose a username"
-                                autoComplete="username"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Email */}
-                    <div className="mb-3">
-                        <label
-                            htmlFor="register-email"
-                            className="form-label"
-                        >
-                            Email address
-                        </label>
-
-                        <div className="register-input-wrapper">
-                            <i className="bi bi-envelope" aria-hidden="true" />
-
-                            <input
-                                type="email"
-                                id="register-email"
-                                name="email"
-                                className="form-control"
-                                placeholder="you@example.com"
-                                autoComplete="email"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Password */}
-                    <div className="mb-3">
-                        <label
-                            htmlFor="register-password"
-                            className="form-label"
-                        >
-                            Password
-                        </label>
-
-                        <div className="register-input-wrapper">
-                            <i className="bi bi-lock" aria-hidden="true" />
-
-                            <input
-                                type="password"
-                                id="register-password"
-                                name="password"
-                                className="form-control"
-                                placeholder="Create a password"
-                                autoComplete="new-password"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Confirm password */}
-                    <div className="mb-3">
-                        <label
-                            htmlFor="confirm-password"
-                            className="form-label"
-                        >
-                            Confirm password
-                        </label>
-
-                        <div className="register-input-wrapper">
-                            <i className="bi bi-shield-lock" aria-hidden="true" />
-
-                            <input
-                                type="password"
-                                id="confirm-password"
-                                name="confirmPassword"
-                                className="form-control"
-                                placeholder="Repeat your password"
-                                autoComplete="new-password"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Terms */}
-                    <div className="register-terms form-check mb-4">
-                        <input
-                            type="checkbox"
-                            id="acceptTerms"
-                            name="acceptTerms"
-                            className="form-check-input"
-                        />
-
-                        <label
-                            htmlFor="acceptTerms"
-                            className="form-check-label"
-                        >
-                            I agree to the{" "}
-                            <Link to="/terms">
-                                Terms of Service
-                            </Link>{" "}
-                            and{" "}
-                            <Link to="/privacy">
-                                Privacy Policy
-                            </Link>
-                            .
-                        </label>
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="register-submit-button btn w-100"
-                    >
-                        {submitting ? 'Creating account' : 'Register'}
-                        {/* Create account */}
-                        <i className="bi bi-arrow-right ms-2" aria-hidden="true" />
-                    </button>
+                <form className="register-form" action={formAction} noValidate>
+                    <RegisterFormContent
+                        error={error}
+                        register={register}
+                    />
 
                     <p className="register-login-text">
                         Already have an account?{" "}

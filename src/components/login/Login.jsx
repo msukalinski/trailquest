@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
 
 import LoginForm from "../login-form/LoginForm";
 import useForm from "../../hooks/useForm";

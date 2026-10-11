@@ -1,58 +1,58 @@
 import { useNavigate } from "react-router";
-
-import './Register.css'
-import RegisterForm from "../register-form/RegisterForm";
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+
+import RegisterForm from "../register-form/RegisterForm";
+import useForm from "../../hooks/useForm";
+import { registerUser } from "../../services/userService";
+
+import './Register.css';
 
 export default function Register() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
-    const [submitting, setSubmitting] = useState(false);
 
-    const registerSubmitHandler = async (e) => {
-        e.preventDefault();
-
-        const values = Object.fromEntries(new FormData(e.currentTarget));
-        const email = values.email.trim();
-        const username = values.username.trim();
-        const password = values.password;
-
+    const registerSubmitHandler = async ({ username, email, password, confirmPassword }) => {
         setError('');
+        const trimmedUsername = username.trim();
+        const trimmedEmail = email.trim();
 
-        if (password !== values.confirmPassword) {
-            setError('Passwords do not match');
+        if (!trimmedUsername || !trimmedEmail || !password || !confirmPassword) {
+            setError('All fields are required.');
             return;
         }
 
-        if (!username) {
-            setError('Enter an username');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+            setError('Enter a valid email address.');
             return;
         }
 
-        setSubmitting(true);
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
 
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
+            const data = await registerUser({
+                username: trimmedUsername,
+                email: trimmedEmail,
                 password,
-                options: { data: { username } }
             });
 
-            if (error) {
-                setError(error.message);
+            if (!data.session) {
+                setError('Your account was created, but automatic sign-in failed. Please sign in.');
                 return;
             }
 
-            if (data.session) {
-                navigate('/');
-            }
+            navigate('/');
         } catch (err) {
-            setError(err.message);
-        } finally {
-            setSubmitting(false);
+            setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
         }
-    }
+    };
+
+    const { register, formAction } = useForm(
+        registerSubmitHandler,
+        { username: '', email: '', password: '', confirmPassword: '' }
+    )
 
     return (
         <div className="register-page">
@@ -105,9 +105,9 @@ export default function Register() {
 
                     {/* Form section */}
                     <RegisterForm
-                        onSubmit={registerSubmitHandler}
+                        formAction={formAction}
+                        register={register}
                         error={error}
-                        submitting={submitting}
                     />
                 </div>
             </div>
