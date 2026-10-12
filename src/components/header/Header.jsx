@@ -2,22 +2,32 @@ import { Link, useNavigate } from "react-router";
 import { supabase } from "../../lib/supabase";
 
 import { useContext, useState } from "react";
-import './Header.css'
 import { UserContext } from "../../context/UserContext";
+import './Header.css'
+import useUser from "../../hooks/useUser";
 
 export default function Header() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
-    const { user, initializing } = useContext(UserContext);
+    const [loggingOut, setloggingOut] = useState(false);
+    const { user, initializing, logout } = useUser();
 
     const logoutHandler = async () => {
-        const { error } = await supabase.auth.signOut();
-
-        if (error) {
-            setError(error.message);
+        if (loggingOut) {
+            return;
         }
 
-        navigate('/');
+        setError('');
+        setloggingOut(true);
+
+        try {
+            await logout();
+            navigate('/');
+        } catch (err) {
+            setError(err?.message || 'Could not sign out. Please try again.');
+        } finally {
+            setloggingOut(false);
+        }
     }
 
     return (
@@ -80,8 +90,11 @@ export default function Header() {
                                     <button
                                         type="button"
                                         className="btn text-white px-3 py-2 rounded-3"
-                                        onClick={logoutHandler}>
-                                        Logout
+                                        onClick={logoutHandler}
+                                        disabled={loggingOut}
+                                        aria-busy={loggingOut}
+                                    >
+                                        {loggingOut ? 'Signing out...' : 'Sign out'}
                                     </button>
                                 </>
                             ) : (
@@ -94,6 +107,11 @@ export default function Header() {
                     </div>
                 </div>
             </nav>
+            {user && error && (
+                <div className="container alert alert-danger py-2 mb-3" role="alert">
+                    {error}
+                </div>
+            )}
         </header>
     );
 }

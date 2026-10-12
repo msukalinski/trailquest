@@ -26,3 +26,11 @@ export async function registerUser({ username, email, password }) {
 
     return data;
 }
+
+export async function logout() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        throw error;
+    }
+}

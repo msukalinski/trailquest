@@ -1,46 +1,67 @@
 import { Link } from "react-router";
+import { useEffect, useState } from "react";
 
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/UserContext";
 import { getMyTrails } from "../../services/trailService";
 import MyTrailsCard from "../my-trails-card/MyTrailsCard";
+import useUser from "../../hooks/useUser";
 
-import './MyTrails.css'
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 
+import './MyTrails.css'
+
 export default function MyTrails() {
-    const [trails, setTrails] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const { user, initializing } = useContext(UserContext);
+    const [loadResult, setLoadResult] = useState(null);
+    const { user, initializing } = useUser();
     const userId = user?.id;
+    const currentResult = loadResult?.userId === userId ? loadResult : null;
+    const trails = currentResult?.trails ?? [];
+    const error = currentResult?.error;
+    const loading = !currentResult;
 
     useEffect(() => {
-        const loadUserTrails = async () => {
-            setLoading(true);
-            setError('');
-
-            try {
-                const data = await getMyTrails(userId);
-                setTrails(data);
-            } catch (err) {
-                setError(err.message || 'Could not load your trails.');
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        if (initializing) return;
-
-        if (!userId) {
-            setTrails([]);
-            setLoading(false);
+        if (initializing || !userId) {
             return;
         }
 
+        const controller = new AbortController();
+
+        const loadUserTrails = async () => {
+            try {
+                const data = await getMyTrails(userId, controller.signal);
+
+                if (!controller.signal.aborted) {
+                    setLoadResult({ userId, trails: data });
+                }
+            } catch (err) {
+                if (!controller.signal.aborted) {
+                    setLoadResult({
+                        userId,
+                        error: err?.message || 'Could not load your trails.'
+                    });
+                }
+            }
+        };
+
         loadUserTrails();
+
+        return () => controller.abort();
     }, [initializing, userId]);
+
+    if (initializing) {
+        return (
+            <Loader />
+        )
+    }
+
+    if (!user) {
+        return (
+            <div className="container py-5">
+                <p role="status">Sign in to view your trails.</p>
+                <Link to="/login" className="btn btn-outline-success">Sign in</Link>
+            </div>
+        )
+    }
 
     return (
         <div className="my-trails-page">

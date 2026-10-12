@@ -32,11 +32,17 @@ export async function getTrails() {
     return data;
 }
 
-export async function getMyTrails(userId) {
-    const { data, error } = await supabase
+export async function getMyTrails(userId, signal) {
+    const query = supabase
         .from('trails')
         .select('*')
         .eq('ownerId', userId);
+
+    if (signal) {
+        query.abortSignal(signal);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         throw error;

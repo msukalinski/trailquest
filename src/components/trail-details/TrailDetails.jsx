@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 
 import { deleteTrail, getTrailById } from "../../services/trailService";
+import useUser from "../../hooks/useUser";
 
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
@@ -11,6 +12,7 @@ import './TrailDetails.css'
 export default function TrailDetails() {
     const { trailId } = useParams();
     const navigate = useNavigate();
+    const { user, initializing } = useUser();
 
     const [trail, setTrail] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -52,18 +54,24 @@ export default function TrailDetails() {
     if (error) return <ErrorMessage message={error} />;
     if (!trail) return <NotFound />;
 
+    const isOwner = Boolean(!initializing && user && user.id === trail.ownerId);
+
     // const nameInitials = `${trail?.owner.firstName[0]}${trail?.owner.lastName[0]}`;
     // console.log(nameInitials);
 
-    const ownerName = [trail.owner?.firstName?.trim(), trail.owner?.lastName?.trim()]
-        .filter(Boolean)
-        .join(' ') || trail.owner?.username?.trim() || 'TrailQuest member';
+    // const ownerName = [trail.owner?.firstName?.trim(), trail.owner?.lastName?.trim()]
+    //     .filter(Boolean)
+    //     .join(' ') || trail.owner?.username?.trim() || 'TrailQuest member';
 
-    const nameInitials = ownerName === 'TrailQuest member'
-        ? 'TQ'
-        : ownerName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+    // const nameInitials = ownerName === 'TrailQuest member'
+    //     ? 'TQ'
+    //     : ownerName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 
     const deleteTrailHandler = async () => {
+        if (!isOwner) {
+            return;
+        }
+
         const confirmed = window.confirm(`Are you sure you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
 
         if (!confirmed) return;
@@ -153,11 +161,6 @@ export default function TrailDetails() {
                             </p>
 
                             <h1>{trail.title}</h1>
-
-                            {/* <span>
-                                A breathtaking journey through Bulgaria’s
-                                most famous glacial lakes.
-                            </span> */}
                         </div>
                     </div>
 
@@ -168,12 +171,12 @@ export default function TrailDetails() {
                                 className="trail-details-avatar"
                                 aria-hidden="true"
                             >
-                                {nameInitials}
+                                TODO
                             </div>
 
                             <div>
                                 <span>Shared by</span>
-                                <strong>{ownerName}</strong>
+                                <strong>TODO</strong>
                             </div>
                         </div>
 
@@ -280,11 +283,11 @@ export default function TrailDetails() {
                                         className="trail-details-author-avatar"
                                         aria-hidden="true"
                                     >
-                                        {nameInitials}
+                                        TODO
                                     </div>
 
                                     <div>
-                                        <strong>{ownerName}</strong>
+                                        <strong>TODO</strong>
                                         {!trail.owner && <span>Profile unavailable</span>}
                                         <span>Member since 2026</span>
                                     </div>
@@ -314,32 +317,34 @@ export default function TrailDetails() {
                             </section>
 
                             {/* Show only to the trail owner later */}
-                            <section className="trail-details-owner-card">
-                                <p>Owner controls</p>
+                            {isOwner && (
+                                <section className="trail-details-owner-card">
+                                    <p>Owner controls</p>
 
-                                <Link
-                                    to={`/trails/${trail.id}/edit`}
-                                    className="trail-details-edit-button"
-                                >
-                                    <i
-                                        className="bi bi-pencil"
-                                        aria-hidden="true"
-                                    />
-                                    Edit trail
-                                </Link>
+                                    <Link
+                                        to={`/trails/${trail.id}/edit`}
+                                        className="trail-details-edit-button"
+                                    >
+                                        <i
+                                            className="bi bi-pencil"
+                                            aria-hidden="true"
+                                        />
+                                        Edit trail
+                                    </Link>
 
-                                <button
-                                    type="button"
-                                    className="trail-details-delete-button"
-                                    onClick={deleteTrailHandler}
-                                >
-                                    <i
-                                        className="bi bi-trash3"
-                                        aria-hidden="true"
-                                    />
-                                    Delete trail
-                                </button>
-                            </section>
+                                    <button
+                                        type="button"
+                                        className="trail-details-delete-button"
+                                        onClick={deleteTrailHandler}
+                                    >
+                                        <i
+                                            className="bi bi-trash3"
+                                            aria-hidden="true"
+                                        />
+                                        Delete trail
+                                    </button>
+                                </section>
+                            )}
                         </aside>
                     </div>
                 </div>
