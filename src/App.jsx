@@ -9,6 +9,9 @@ import MyTrails from "./components/my-trails/MyTrails"
 import Login from "./components/login/Login"
 import Register from "./components/register/Register"
 import NotFound from "./components/not-found/NotFound"
+
+import GuestGuard from "./guards/GuestGuard"
+import AuthGuard from "./guards/AuthGuard"
 // import Loader from "./components/shared/loader/Loader"
 
 function App() {
@@ -18,13 +21,20 @@ function App() {
 			<Routes>
 				<Route element={<MainLayout />}>
 					<Route path="/" element={<Home />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
 					<Route path="/trails" element={<TrailsCatalog />} />
-					<Route path="/trails/create" element={<CreateTrail />} />
 					<Route path="/trails/:trailId/details" element={<TrailDetails />} />
-					<Route path="/trails/:trailId/edit" element={<EditTrail />} />
-					<Route path="/my-trails" element={<MyTrails />} />
+
+					<Route element={<GuestGuard />}>
+						<Route path="/login" element={<Login />} />
+						<Route path="/register" element={<Register />} />
+					</Route>
+
+					<Route element={<AuthGuard />}>
+						<Route path="/trails/create" element={<CreateTrail />} />
+						<Route path="/trails/:trailId/edit" element={<EditTrail />} />
+						<Route path="/my-trails" element={<MyTrails />} />
+					</Route>
+
 					<Route path="*" element={<NotFound />} />
 					{/* <Route path="*" element={<Loader text={'Please wait'} />} /> */}
 				</Route>

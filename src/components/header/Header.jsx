@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router";
-import { supabase } from "../../lib/supabase";
+import { useState } from "react";
 
-import { useContext, useState } from "react";
-import { UserContext } from "../../context/UserContext";
-import './Header.css'
 import useUser from "../../hooks/useUser";
+
+import './Header.css'
 
 export default function Header() {
     const navigate = useNavigate();
