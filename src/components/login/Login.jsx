@@ -64,7 +64,7 @@ export default function Login() {
                                 </h1>
 
                                 <p className="login-visual-description">
-                                    Sign in to save your favourite trails,
+                                    Log in to save your favourite trails,
                                     share new routes and continue exploring.
                                 </p>
 

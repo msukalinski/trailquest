@@ -58,7 +58,7 @@ function LoginFormContent({ register, error }) {
                     className="login-submit-button btn w-100"
                     disabled={pending}
                 >
-                    {pending ? 'Signing in…' : 'Sign in'}
+                    {pending ? 'Logging in…' : 'Log in'}
                     <i className="bi bi-arrow-right ms-2" aria-hidden="true" />
                 </button>
             </fieldset>
@@ -85,7 +85,7 @@ export default function LoginForm({
                         TrailQuest
                     </p>
 
-                    <h2>Sign in to your account</h2>
+                    <h2>Log in to your account</h2>
 
                     <p className="login-subtitle">
                         Enter your details to continue your journey.

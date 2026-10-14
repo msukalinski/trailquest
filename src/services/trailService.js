@@ -101,7 +101,7 @@ export async function createTrail(newTrail) {
     }
 
     if (!user) {
-        throw new Error("Sign in to create trail.");
+        throw new Error("Log in to create trail.");
 
     }
 

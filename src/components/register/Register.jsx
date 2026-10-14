@@ -39,7 +39,7 @@ export default function Register() {
             });
 
             if (!data.session) {
-                setError('Your account was created, but automatic sign-in failed. Please sign in.');
+                setError('Your account was created, but automatic log in failed. Please log in.');
                 return;
             }
 

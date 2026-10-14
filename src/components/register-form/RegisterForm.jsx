@@ -140,7 +140,7 @@ export default function RegisterForm({
 
                     <p className="register-login-text">
                         Already have an account?{" "}
-                        <Link to="/login">Sign in</Link>
+                        <Link to="/login">Log in</Link>
                     </p>
                 </form>
 

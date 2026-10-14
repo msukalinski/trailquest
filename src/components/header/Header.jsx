@@ -23,7 +23,7 @@ export default function Header() {
             await logout();
             navigate('/');
         } catch (err) {
-            setError(err?.message || 'Could not sign out. Please try again.');
+            setError(err?.message || 'Could not log out. Please try again.');
         } finally {
             setloggingOut(false);
         }
@@ -93,12 +93,12 @@ export default function Header() {
                                         disabled={loggingOut}
                                         aria-busy={loggingOut}
                                     >
-                                        {loggingOut ? 'Signing out...' : 'Sign out'}
+                                        {loggingOut ? 'Logging out...' : 'Log out'}
                                     </button>
                                 </>
                             ) : (
                                 <Link to="/login" className="btn text-white px-3 py-2 rounded-3">
-                                    Sign in
+                                    Log in
                                 </Link>
                             )
                         )}
