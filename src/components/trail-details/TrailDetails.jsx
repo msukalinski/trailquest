@@ -72,7 +72,7 @@ export default function TrailDetails() {
             return;
         }
 
-        const confirmed = window.confirm(`Are you sure you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
+        const confirmed = window.confirm(`Are you sure you want to delete the following trail: ${trail.title}? This cannot be undone.`);
 
         if (!confirmed) return;
 

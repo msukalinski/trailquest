@@ -15,6 +15,8 @@ export default function MyTrailsCard({
     statusClass,
     // views,
     favourites,
+    onDelete,
+    deletingId
 }) {
     return (
         <article className="my-trail-card">
@@ -85,9 +87,12 @@ export default function MyTrailsCard({
                     <button
                         type="button"
                         className="my-trail-delete-button"
+                        onClick={() => onDelete(id, title)}
+                        disabled={Boolean(deletingId)}
+                        aria-busy={deletingId === id}
                     >
                         <i className="bi bi-trash3" aria-hidden="true" />
-                        Delete
+                        {deletingId === id ? 'Deleting...' : 'Delete'}
                     </button>
                 </div>
             </div>

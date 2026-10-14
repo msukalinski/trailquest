@@ -1,7 +1,7 @@
-import { Link, Navigate } from "react-router";
+import { Link } from "react-router";
 import { useEffect, useState } from "react";
 
-import { getMyTrails } from "../../services/trailService";
+import { deleteTrail, getMyTrails } from "../../services/trailService";
 import MyTrailsCard from "../my-trails-card/MyTrailsCard";
 import useUser from "../../hooks/useUser";
 
@@ -18,6 +18,8 @@ export default function MyTrails() {
     const trails = currentResult?.trails ?? [];
     const error = currentResult?.error;
     const loading = !currentResult;
+    const [deletingId, setDeletingId] = useState(null);
+    const [deleteError, setDeleteError] = useState('');
 
     useEffect(() => {
         if (initializing || !userId) {
@@ -47,6 +49,40 @@ export default function MyTrails() {
 
         return () => controller.abort();
     }, [initializing, userId]);
+
+    const deleteTrailHandler = async (id, title) => {
+        if (!userId || deletingId) {
+            return;
+        }
+
+        const confirmed = window.confirm(`Are you sure you want to delete the following trail ${title}? This cannot be undone.`);
+
+        if (!confirmed) {
+            return;
+        }
+
+        setDeleteError('');
+        setDeletingId(id);
+
+        try {
+            await deleteTrail(id);
+
+            setLoadResult(current => {
+                if (current?.userId !== userId || !current?.trails) {
+                    return current;
+                }
+
+                return {
+                    ...current,
+                    trails: current.trails.filter(trail => trail.id !== id),
+                };
+            });
+        } catch (err) {
+            setDeleteError(err?.message || 'Could not delete this trail.');
+        } finally {
+            setDeletingId(null);
+        }
+    }
 
     return (
         <div className="my-trails-page">
@@ -173,6 +209,8 @@ export default function MyTrails() {
                         </div>
                     </div>
 
+                    {deleteError && <ErrorMessage message={deleteError} />}
+
                     <div className="my-trails-grid">
                         {loading ? (
                             <Loader />
@@ -181,7 +219,14 @@ export default function MyTrails() {
                         ) : trails.length === 0 ? (
                             <strong>You haven't created any trails yet.</strong>
                         ) : (
-                            trails.map(trail => <MyTrailsCard key={trail.id} {...trail} />)
+                            trails.map(trail => (
+                                <MyTrailsCard
+                                    key={trail.id}
+                                    {...trail}
+                                    onDelete={deleteTrailHandler}
+                                    deleteId={deletingId}
+                                />)
+                            )
                         )}
                     </div>
                 </div>
