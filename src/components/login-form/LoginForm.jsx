@@ -70,6 +70,7 @@ export default function LoginForm({
     formAction,
     register,
     error,
+    state
 }) {
 
     return (
@@ -89,6 +90,10 @@ export default function LoginForm({
                     <p className="login-subtitle">
                         Enter your details to continue your journey.
                     </p>
+                    {state?.message && (
+                        <p className="login-access-message">{state.message}</p>
+                    )}
+
                 </div>
 
                 <form className="login-form" action={formAction} noValidate>

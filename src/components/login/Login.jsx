@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 
 import LoginForm from "../login-form/LoginForm";
@@ -8,6 +8,7 @@ import { login } from "../../services/userService";
 import './Login.css';
 
 export default function Login() {
+    const { state } = useLocation();
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
@@ -80,10 +81,12 @@ export default function Login() {
                     </section>
 
                     {/* Form section */}
+
                     <LoginForm
                         formAction={formAction}
                         register={register}
                         error={error}
+                        state={state}
                     />
                 </div>
             </div>

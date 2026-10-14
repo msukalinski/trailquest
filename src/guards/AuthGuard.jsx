@@ -11,7 +11,11 @@ export default function AuthGuard() {
     }
 
     if (!user) {
-        return <Navigate to="/login" replace />
+        return <Navigate
+            to="/login"
+            replace
+            state={{ message: 'Please log in or register to access this page.' }}
+        />
     }
 
     return <Outlet />

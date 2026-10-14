@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import { useEffect, useState } from "react";
 
 import { getMyTrails } from "../../services/trailService";
@@ -47,21 +47,6 @@ export default function MyTrails() {
 
         return () => controller.abort();
     }, [initializing, userId]);
-
-    if (initializing) {
-        return (
-            <Loader />
-        )
-    }
-
-    if (!user) {
-        return (
-            <div className="container py-5">
-                <p role="status">Sign in to view your trails.</p>
-                <Link to="/login" className="btn btn-outline-success">Sign in</Link>
-            </div>
-        )
-    }
 
     return (
         <div className="my-trails-page">
