@@ -1,19 +1,38 @@
-import { useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 
-import Loader from '../loader/Loader';
-import EditTrailForm from '../edit-trail-form/EditTrailForm';
-import ErrorMessage from '../error-message/ErrorMessage';
-
 import { getTrailById, updateTrail } from '../../services/trailService';
+import useTrailForm from '../../hooks/useTrailForm';
+import useUser from '../../hooks/useUser';
+import TrailForm from '../trail-form/TrailForm';
+import ErrorMessage from '../error-message/ErrorMessage';
+import Loader from '../loader/Loader';
 
-import '../create-trail/CreateTrail.css';
 import './EditTrail.css';
+
+function EditFormWrapper({
+    trailId,
+    trail,
+    onEdit
+}) {
+    const editForm = useTrailForm(onEdit, trail);
+
+    return (
+        <TrailForm
+            {...editForm}
+            cancelTo={`/trails/${trailId}/details`}
+            submitLabel="Save changes"
+            pendingLabel="Saving changes..."
+            submitIcon="bi bi-check-lg"
+        />
+    )
+}
 
 export default function EditTrail() {
     const { trailId } = useParams();
-    const navigate = useNavigate();
+    const { user } = useUser();
     const [loadResult, setLoadResult] = useState(null);
+    const navigate = useNavigate();
 
     const { trail, loadError } = loadResult ?? {};
     const loading = loadResult?.trailId !== trailId;
@@ -48,6 +67,7 @@ export default function EditTrail() {
         navigate(`/trails/${editedTrail.id}/details`);
     }
 
+
     return (
         <div className="create-trail-page edit-trail-page">
             <section className="create-trail-hero">
@@ -62,18 +82,25 @@ export default function EditTrail() {
 
             <section className="create-trail-content">
                 <div className="container">
-                    {!loading && loadError && <ErrorMessage message={loadError} />}
                     <div className="create-trail-layout">
                         {loading ? (
                             <Loader />
-                        ) : trail ? (
-                            <EditTrailForm
+                        ) : loadError ? (
+                            <ErrorMessage message={loadError} />
+                        ) : !trail ? (
+                            <p role="status">Trail not found.</p>
+                        ) : trail.ownerId !== user?.id ? (
+                            <Navigate
+                                to={`/trails/${trailId}/details`}
+                                replace
+                            />
+                        ) : (
+                            <EditFormWrapper
                                 key={trailId}
+                                trailId={trailId}
                                 trail={trail}
                                 onEdit={editTrailHandler}
                             />
-                        ) : (
-                            <p role='status'>Trail not found.</p>
                         )}
 
                         <aside className="create-trail-sidebar">

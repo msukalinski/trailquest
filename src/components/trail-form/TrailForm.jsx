@@ -2,6 +2,8 @@ import { Link } from "react-router";
 import { useFormStatus } from "react-dom";
 import ErrorMessage from "../error-message/ErrorMessage";
 
+import './TrailForm.css';
+
 function TrailFormContent({
     register,
     errors,
@@ -138,7 +140,7 @@ function TrailFormContent({
                                 <input
                                     {...fieldProps('distance')}
                                     type="number"
-                                    placeholder="17"
+                                    placeholder="11"
                                     min="0"
                                     step="0.1"
                                     required
@@ -157,7 +159,7 @@ function TrailFormContent({
                                 <input
                                     {...fieldProps('duration')}
                                     type="number"
-                                    placeholder="6"
+                                    placeholder="4"
                                     min="0"
                                     step="0.5"
                                     required
@@ -176,7 +178,7 @@ function TrailFormContent({
                                 <input
                                     {...fieldProps('elevation')}
                                     type="number"
-                                    placeholder="550"
+                                    placeholder="350"
                                     min="0"
                                 />
                                 <span>metres</span>
@@ -271,6 +273,7 @@ export default function TrailForm({
     onFieldBlur,
     ...contentProps
 }) {
+
     return (
         <form className="create-trail-form"
             action={formAction}

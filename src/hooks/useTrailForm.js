@@ -4,7 +4,7 @@ import useForm from "./useForm";
 import { validateTrail } from "../validation/validateTrail";
 
 export default function useTrailForm(callback, initialTrail = {}) {
-    const [touched, setTouched] = useState('');
+    const [touched, setTouched] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
 

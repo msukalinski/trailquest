@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router';
 
-import CreateTrailForm from "../create-trail-form/CreateTrailForm";
-import ErrorMessage from '../error-message/ErrorMessage';
 import { createTrail } from '../../services/trailService';
+import useTrailForm from '../../hooks/useTrailForm';
+import TrailForm from '../trail-form/TrailForm';
+
 import './CreateTrail.css'
 
 export default function CreateTrail() {
@@ -12,6 +13,8 @@ export default function CreateTrail() {
         const createdTrail = await createTrail(trailData);
         navigate(`/trails/${createdTrail.id}/details`)
     };
+
+    const createForm = useTrailForm(createTrailHandler);
 
     return (
         <>
@@ -35,8 +38,12 @@ export default function CreateTrail() {
                         <div className="create-trail-layout">
 
                             {/* Form */}
-                            <CreateTrailForm
-                                onCreate={createTrailHandler}
+                            <TrailForm
+                                {...createForm}
+                                cancelTo='/trails'
+                                submitLabel="Publish trail"
+                                pendingLabel="Publishing trail"
+                                submitIcon="bi bi send"
                             />
 
                             {/* Sidebar */}
