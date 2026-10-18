@@ -6,7 +6,7 @@ function RegisterFormContent({ register, error }) {
 
     return (
         <>
-            {!pending && error && (
+            {error && (
                 <p className="alert alert-danger" role="alert">
                     {error}
                 </p>

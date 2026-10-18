@@ -1,12 +1,15 @@
 import { useFormStatus } from "react-dom";
 import { Link } from "react-router";
 
-function LoginFormContent({ register, error }) {
+function LoginFormContent({
+    register,
+    error
+}) {
     const { pending } = useFormStatus();
 
     return (
         <>
-            {!pending && error && (
+            {error && (
                 <p className="alert alert-danger" role="alert">
                     {error}
                 </p>
@@ -96,7 +99,7 @@ export default function LoginForm({
 
                 </div>
 
-                <form className="login-form" action={formAction} noValidate>
+                <form className="login-form" action={formAction} onReset={(event) => event.preventDefault()} noValidate>
                     <LoginFormContent
                         register={register}
                         error={error}
