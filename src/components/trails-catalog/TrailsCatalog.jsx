@@ -5,21 +5,42 @@ import { getTrails } from "../../services/trailService";
 import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
 import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
 import "./TrailsCatalog.css";
+import Loader from "../loader/Loader";
+import ErrorMessage from "../error-message/ErrorMessage";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
+        const controller = new AbortController();
+
         const loadTrails = async () => {
             try {
-                const data = await getTrails();
-                setTrails(data);
+                const data = await getTrails(controller.signal);
+
+                if (!controller.signal.aborted) {
+                    setTrails(data);
+                }
             } catch (err) {
-                console.error('Error fetching trails', err.message);
+                if (!controller.signal.aborted) {
+                    console.error('Error fetching trails', err.message);
+
+                    setError('Could not load trails. Please try again later.');
+                }
+            } finally {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
             }
         };
 
         loadTrails();
+
+        return () => {
+            controller.abort();
+        }
     }, []);
 
     return (
@@ -63,15 +84,19 @@ export default function TrailsCatalog() {
                         </p>
                     </div>
 
-                    {trails.length === 0
-                        ? <h2>There is no trails added yet</h2>
-                        : (
-                            <div className="catalog-grid">
-                                {trails.map(trail => <TrailsCatalogCard key={trail.id} {...trail} />)}
-                            </div>
-
-                        )
-                    }
+                    {loading ? (
+                        <Loader text='Loading trails...' />
+                    ) : error ? (
+                        <ErrorMessage message={error} />
+                    ) : trails.length === 0 ? (
+                        <h2>No trails added yet</h2>
+                    ) : (
+                        <div className="catalog-grid">
+                            {trails.map(trail => (
+                                <TrailsCatalogCard key={trail.id} {...trail} />
+                            ))}
+                        </div>
+                    )}
 
                     {/* Static pagination */}
                     <nav

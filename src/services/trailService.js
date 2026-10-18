@@ -20,10 +20,16 @@ export async function getProfile(userId, signal) {
     return data;
 }
 
-export async function getTrails() {
-    const { data, error } = await supabase
+export async function getTrails(signal) {
+    const query = supabase
         .from('trails')
         .select('*');
+
+    if (signal) {
+        query.abortSignal(signal);
+    }
+
+    const { data, error } = await query
 
     if (error) {
         throw error;
@@ -51,12 +57,18 @@ export async function getMyTrails(userId, signal) {
     return data;
 }
 
-export async function getLatestTrails() {
-    const { data, error } = await supabase
+export async function getLatestTrails(signal) {
+    const query = supabase
         .from('trails')
         .select('*')
         .order('createdAt', { ascending: false })
         .limit(3);
+
+    if (signal) {
+        query.abortSignal(signal);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         throw error;

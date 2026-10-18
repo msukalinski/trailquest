@@ -213,7 +213,7 @@ export default function MyTrails() {
 
                     <div className="my-trails-grid">
                         {loading ? (
-                            <Loader />
+                            <Loader text='Loading trails...' />
                         ) : error ? (
                             <ErrorMessage message={error} />
                         ) : trails.length === 0 ? (
