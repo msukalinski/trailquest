@@ -131,28 +131,6 @@ export default function MyTrails() {
                         </div>
 
                         <div className="my-trails-statistic">
-                            <div className="my-trails-statistic-icon orange">
-                                <i className="bi bi-cloud-check" aria-hidden="true" />
-                            </div>
-
-                            <div>
-                                <strong>2</strong>
-                                <span>Published</span>
-                            </div>
-                        </div>
-
-                        <div className="my-trails-statistic">
-                            <div className="my-trails-statistic-icon blue">
-                                <i className="bi bi-file-earmark-text" aria-hidden="true" />
-                            </div>
-
-                            <div>
-                                <strong>1</strong>
-                                <span>Draft</span>
-                            </div>
-                        </div>
-
-                        <div className="my-trails-statistic">
                             <div className="my-trails-statistic-icon red">
                                 <i className="bi bi-heart" aria-hidden="true" />
                             </div>

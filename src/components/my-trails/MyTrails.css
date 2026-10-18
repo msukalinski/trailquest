@@ -92,11 +92,14 @@
 .my-trails-statistics {
     display: grid;
     overflow: hidden;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     border: 1px solid rgba(22, 59, 45, 0.08);
     border-radius: 17px;
     background-color: #ffffff;
     box-shadow: 0 13px 34px rgba(22, 59, 45, 0.13);
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
 }
 
 .my-trails-statistic {

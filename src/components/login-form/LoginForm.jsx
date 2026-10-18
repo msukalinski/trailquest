@@ -99,7 +99,7 @@ export default function LoginForm({
 
                 </div>
 
-                <form className="login-form" action={formAction} onReset={(event) => event.preventDefault()} noValidate>
+                <form className="login-form" action={formAction} noValidate>
                     <LoginFormContent
                         register={register}
                         error={error}
