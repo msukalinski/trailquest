@@ -278,7 +278,9 @@ export default function TrailForm({
         <form className="create-trail-form"
             action={formAction}
             onBlur={onFieldBlur}
-            noValidate>
+            onReset={(event) => event.preventDefault()}
+            noValidate
+        >
             <TrailFormContent {...contentProps} />
         </form>
 

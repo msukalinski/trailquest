@@ -224,7 +224,7 @@ export default function MyTrails() {
                                     key={trail.id}
                                     {...trail}
                                     onDelete={deleteTrailHandler}
-                                    deleteId={deletingId}
+                                    deletingId={deletingId}
                                 />)
                             )
                         )}
