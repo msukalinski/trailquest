@@ -25,10 +25,16 @@ export async function getTrails(signal, {
     region = '',
     difficulty = '',
     sort = 'newest',
-} = {}) {
+} = {},
+    page = 1,
+    PAGE_SIZE = 6) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
     let query = supabase
         .from('trails')
-        .select('*');
+        .select('*', { count: 'exact' })
+        .range(from, to);
 
     const searchText = search.trim();
 
@@ -58,13 +64,16 @@ export async function getTrails(signal, {
         query.abortSignal(signal);
     }
 
-    const { data, error } = await query;
+    const { data, error, count } = await query;
 
     if (error) {
         throw error;
     }
 
-    return data;
+    return {
+        trails: data,
+        totalCount: count,
+    };
 }
 
 export async function getMyTrails(userId, signal) {

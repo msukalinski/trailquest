@@ -10,9 +10,13 @@ import ErrorMessage from "../error-message/ErrorMessage";
 import "./TrailsCatalog.css";
 
 export default function TrailsCatalog() {
+    const PAGE_SIZE = 6;
+
     const [trails, setTrails] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [page, setPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
     const [filters, setFilters] = useState({
         search: '',
         region: '',
@@ -20,9 +24,12 @@ export default function TrailsCatalog() {
         sort: 'newest',
     });
 
+    const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
     const searchHandler = (values) => {
         setLoading(true);
         setError('');
+        setPage(1);
 
         setFilters({
             ...values,
@@ -30,15 +37,36 @@ export default function TrailsCatalog() {
         });
     }
 
+    const pageChangeHandler = (nextPage) => {
+        if (
+            loading ||
+            nextPage === page ||
+            nextPage < 1 ||
+            nextPage > totalPages
+        ) {
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        setPage(nextPage);
+    }
+
     useEffect(() => {
         const controller = new AbortController();
 
         const loadTrails = async () => {
             try {
-                const data = await getTrails(controller.signal, filters);
+                const result = await getTrails(
+                    controller.signal,
+                    filters,
+                    page,
+                    PAGE_SIZE
+                );
 
                 if (!controller.signal.aborted) {
-                    setTrails(data);
+                    setTrails(result.trails);
+                    setTotalCount(result.totalCount);
                 }
             } catch (err) {
                 if (!controller.signal.aborted) {
@@ -58,7 +86,7 @@ export default function TrailsCatalog() {
         return () => {
             controller.abort();
         }
-    }, [filters]);
+    }, [filters, page]);
 
     return (
         <div className="trails-catalog-page">
@@ -117,54 +145,59 @@ export default function TrailsCatalog() {
                         </div>
                     )}
 
-                    {/* Static pagination */}
-                    <nav
-                        className="catalog-pagination"
-                        aria-label="Trails pagination"
-                    >
-                        <button
-                            type="button"
-                            className="catalog-page-button"
-                            aria-label="Previous page"
+                    {/* Dynamic pagination */}
+                    {!error && totalPages > 1 && (
+                        <nav
+                            className="catalog-pagination"
+                            aria-label="Trails pagination"
                         >
-                            <i
-                                className="bi bi-chevron-left"
-                                aria-hidden="true"
-                            />
-                        </button>
+                            <button
+                                type="button"
+                                className="catalog-page-button"
+                                aria-label="Previous page"
+                                disabled={loading || page === 1}
+                                onClick={() => pageChangeHandler(page - 1)}
+                            >
+                                <i
+                                    className="bi bi-chevron-left"
+                                    aria-hidden="true"
+                                />
+                            </button>
 
-                        <button
-                            type="button"
-                            className="catalog-page-button active"
-                        >
-                            1
-                        </button>
+                            {Array.from({ length: totalPages }, (_, index) => {
+                                const pageNumber = index + 1;
 
-                        <button
-                            type="button"
-                            className="catalog-page-button"
-                        >
-                            2
-                        </button>
+                                return (
+                                    <button
+                                        key={pageNumber}
+                                        type="button"
+                                        className={`catalog-page-button ${page === pageNumber ? 'active' : ''}`}
+                                        aria-current={
+                                            page === pageNumber ? 'page' : undefined
+                                        }
+                                        disabled={loading}
+                                        onClick={() => pageChangeHandler(pageNumber)}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                )
+                            })}
 
-                        <button
-                            type="button"
-                            className="catalog-page-button"
-                        >
-                            3
-                        </button>
+                            <button
+                                type="button"
+                                className="catalog-page-button"
+                                aria-label="Next page"
+                                disabled={loading || page === totalPages}
+                                onClick={() => pageChangeHandler(page + 1)}
+                            >
 
-                        <button
-                            type="button"
-                            className="catalog-page-button"
-                            aria-label="Next page"
-                        >
-                            <i
-                                className="bi bi-chevron-right"
-                                aria-hidden="true"
-                            />
-                        </button>
-                    </nav>
+                                <i
+                                    className="bi bi-chevron-right"
+                                    aria-hidden="true"
+                                />
+                            </button>
+                        </nav>
+                    )}
                 </div>
             </section>
         </div>
