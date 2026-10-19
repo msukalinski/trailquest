@@ -20,8 +20,8 @@ export default function Header() {
         setloggingOut(true);
 
         try {
-            await logout();
             navigate('/');
+            await logout();
         } catch (err) {
             setError(err?.message || 'Could not log out. Please try again.');
         } finally {
