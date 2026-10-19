@@ -8,7 +8,7 @@ import './Header.css'
 export default function Header() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
-    const [loggingOut, setloggingOut] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
     const { user, initializing, logout } = useUser();
 
     const logoutHandler = async () => {
@@ -17,7 +17,7 @@ export default function Header() {
         }
 
         setError('');
-        setloggingOut(true);
+        setLoggingOut(true);
 
         try {
             navigate('/');
@@ -25,7 +25,7 @@ export default function Header() {
         } catch (err) {
             setError(err?.message || 'Could not log out. Please try again.');
         } finally {
-            setloggingOut(false);
+            setLoggingOut(false);
         }
     }
 
