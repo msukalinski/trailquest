@@ -1,11 +1,25 @@
+import useForm from '../../hooks/useForm';
 import './TrailsCatalogSearch.css'
 
-export default function TrailsCatalogSearch() {
+export default function TrailsCatalogSearch({
+    onSearch
+}) {
+    const { register, formAction } = useForm(onSearch, {
+        search: '',
+        region: '',
+        difficulty: '',
+        sort: 'newest',
+    })
+
     return (
         <section className="catalog-filter-section">
             <div className="container">
                 <div className="catalog-filter-box">
-                    <form className="row g-3">
+                    <form
+                        className="row g-3"
+                        action={formAction}
+                        onReset={(event) => event.preventDefault()}
+                    >
                         <div className="col-lg-4">
                             <label
                                 htmlFor="catalog-search"
@@ -21,9 +35,9 @@ export default function TrailsCatalogSearch() {
                                 />
 
                                 <input
+                                    {...register('search')}
                                     type="search"
                                     id="catalog-search"
-                                    name="search"
                                     className="form-control"
                                     placeholder="Search by trail name..."
                                 />
@@ -32,23 +46,24 @@ export default function TrailsCatalogSearch() {
 
                         <div className="col-md-4 col-lg-2">
                             <label
-                                htmlFor="catalog-location"
+                                htmlFor="catalog-region"
                                 className="form-label"
                             >
-                                Location
+                                Region
                             </label>
 
                             <select
-                                id="catalog-location"
-                                name="location"
+                                {...register('region')}
+                                id="catalog-region"
                                 className="form-select"
                             >
-                                <option>All locations</option>
-                                <option>Rila Mountain</option>
-                                <option>Pirin Mountain</option>
-                                <option>Vitosha Mountain</option>
-                                <option>Rhodope Mountains</option>
-                                <option>Balkan Mountains</option>
+                                <option value="">All regions</option>
+                                <option value="Rila">Rila Mountain</option>
+                                <option value="Pirin">Pirin Mountain</option>
+                                <option value="Vitosha">Vitosha Mountain</option>
+                                <option value="Rhodope">Rhodope Mountains</option>
+                                <option value="Balkan">Balkan Mountains</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
 
@@ -61,14 +76,14 @@ export default function TrailsCatalogSearch() {
                             </label>
 
                             <select
+                                {...register('difficulty')}
                                 id="catalog-difficulty"
-                                name="difficulty"
                                 className="form-select"
                             >
-                                <option>Any difficulty</option>
-                                <option>Easy</option>
-                                <option>Moderate</option>
-                                <option>Hard</option>
+                                <option value="">Any difficulty</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Hard">Hard</option>
                             </select>
                         </div>
 
@@ -81,20 +96,20 @@ export default function TrailsCatalogSearch() {
                             </label>
 
                             <select
+                                {...register('sort')}
                                 id="catalog-sort"
-                                name="sort"
                                 className="form-select"
                             >
-                                <option>Most popular</option>
-                                <option>Newest</option>
-                                <option>Shortest distance</option>
-                                <option>Longest distance</option>
+                                <option value="newest">Newest</option>
+                                <option value="oldest">Oldest</option>
+                                <option value="distance-asc">Shortest distance</option>
+                                <option value="distance-desc">Longest distance</option>
                             </select>
                         </div>
 
                         <div className="col-lg-2 d-flex align-items-end">
                             <button
-                                type="button"
+                                type="submit"
                                 className="catalog-search-button btn w-100"
                             >
                                 Search

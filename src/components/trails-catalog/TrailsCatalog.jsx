@@ -4,21 +4,38 @@ import { getTrails } from "../../services/trailService";
 
 import TrailsCatalogCard from "../trails-catalog-card/TrailsCatalogCard";
 import TrailsCatalogSearch from "../trails-catalog-search/TrailsCatalogSearch";
-import "./TrailsCatalog.css";
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
+
+import "./TrailsCatalog.css";
 
 export default function TrailsCatalog() {
     const [trails, setTrails] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [filters, setFilters] = useState({
+        search: '',
+        region: '',
+        difficulty: '',
+        sort: 'newest',
+    });
+
+    const searchHandler = (values) => {
+        setLoading(true);
+        setError('');
+
+        setFilters({
+            ...values,
+            search: values.search.trim(),
+        });
+    }
 
     useEffect(() => {
         const controller = new AbortController();
 
         const loadTrails = async () => {
             try {
-                const data = await getTrails(controller.signal);
+                const data = await getTrails(controller.signal, filters);
 
                 if (!controller.signal.aborted) {
                     setTrails(data);
@@ -41,7 +58,7 @@ export default function TrailsCatalog() {
         return () => {
             controller.abort();
         }
-    }, []);
+    }, [filters]);
 
     return (
         <div className="trails-catalog-page">
@@ -65,7 +82,7 @@ export default function TrailsCatalog() {
             </section>
 
             {/* Filters */}
-            <TrailsCatalogSearch />
+            <TrailsCatalogSearch onSearch={searchHandler} />
 
             {/* Trails */}
             <section className="catalog-results-section">
@@ -79,9 +96,11 @@ export default function TrailsCatalog() {
                             <h2>All trails</h2>
                         </div>
 
-                        <p className="catalog-results-count">
-                            Showing <strong>{trails.length}</strong> trails
-                        </p>
+                        {!loading && !error && (
+                            <p className="catalog-results-count">
+                                Showing <strong>{trails.length}</strong> trails
+                            </p>
+                        )}
                     </div>
 
                     {loading ? (
@@ -89,7 +108,7 @@ export default function TrailsCatalog() {
                     ) : error ? (
                         <ErrorMessage message={error} />
                     ) : trails.length === 0 ? (
-                        <h2>No trails added yet</h2>
+                        <h2>No trails found.</h2>
                     ) : (
                         <div className="catalog-grid">
                             {trails.map(trail => (

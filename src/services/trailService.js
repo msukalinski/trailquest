@@ -20,16 +20,45 @@ export async function getProfile(userId, signal) {
     return data;
 }
 
-export async function getTrails(signal) {
-    const query = supabase
+export async function getTrails(signal, {
+    search = '',
+    region = '',
+    difficulty = '',
+    sort = 'newest',
+} = {}) {
+    let query = supabase
         .from('trails')
         .select('*');
+
+    const searchText = search.trim();
+
+    if (searchText) {
+        query = query.ilike('title', `%${searchText}%`);
+    }
+
+    if (region) {
+        query = query.eq('region', region);
+    }
+
+    if (difficulty) {
+        query = query.eq('difficulty', difficulty);
+    }
+
+    if (sort === 'distance-asc') {
+        query = query.order('distance', { ascending: true });
+    } else if (sort === 'distance-desc') {
+        query = query.order('distance', { ascending: false });
+    } else if (sort === 'oldest') {
+        query = query.order('createdAt', { ascending: true });
+    } else {
+        query = query.order('createdAt', { ascending: false });
+    }
 
     if (signal) {
         query.abortSignal(signal);
     }
 
-    const { data, error } = await query
+    const { data, error } = await query;
 
     if (error) {
         throw error;
