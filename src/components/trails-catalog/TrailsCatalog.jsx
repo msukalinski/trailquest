@@ -126,7 +126,8 @@ export default function TrailsCatalog() {
 
                         {!loading && !error && (
                             <p className="catalog-results-count">
-                                Showing <strong>{trails.length}</strong> trails
+                                Showing <strong>{trails.length}</strong> {
+                                trails.length === 1 ? 'trail' : 'trails'}
                             </p>
                         )}
                     </div>
