@@ -56,17 +56,14 @@ export default function TrailDetails() {
 
     const isOwner = Boolean(!initializing && user && user.id === trail.ownerId);
 
-    // const nameInitials = `${trail?.owner.firstName[0]}${trail?.owner.lastName[0]}`;
-    // console.log(nameInitials);
+    const usernameInitial = `${trail?.owner.username[0].toUpperCase()}`;
+    const username = `${trail?.owner?.username[0].toUpperCase()}${trail?.owner?.username.slice(1)}`;
+    const dateObj = new Date(trail?.owner?.created_at);
 
-    // const ownerName = [trail.owner?.firstName?.trim(), trail.owner?.lastName?.trim()]
-    //     .filter(Boolean)
-    //     .join(' ') || trail.owner?.username?.trim() || 'TrailQuest member';
-
-    // const nameInitials = ownerName === 'TrailQuest member'
-    //     ? 'TQ'
-    //     : ownerName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
-
+    const year = dateObj.getUTCFullYear();
+    const month = dateObj.getUTCMonth();
+    const day = dateObj.getUTCDate();
+    
     const deleteTrailHandler = async () => {
         if (!isOwner) {
             return;
@@ -171,12 +168,12 @@ export default function TrailDetails() {
                                 className="trail-details-avatar"
                                 aria-hidden="true"
                             >
-                                TODO
+                                {usernameInitial}
                             </div>
 
                             <div>
                                 <span>Shared by</span>
-                                <strong>TODO</strong>
+                                <strong>{username}</strong>
                             </div>
                         </div>
 
@@ -283,13 +280,13 @@ export default function TrailDetails() {
                                         className="trail-details-author-avatar"
                                         aria-hidden="true"
                                     >
-                                        TODO
+                                        {usernameInitial}
                                     </div>
 
                                     <div>
-                                        <strong>TODO</strong>
+                                        <strong>{username}</strong>
                                         {!trail.owner && <span>Profile unavailable</span>}
-                                        <span>Member since 2026</span>
+                                        <span>Member since {`${day}.${month}.${year}`}</span>
                                     </div>
                                 </div>
 
