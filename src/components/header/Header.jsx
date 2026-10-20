@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { useState } from "react";
 
 import useUser from "../../hooks/useUser";
@@ -10,6 +10,14 @@ export default function Header() {
     const [error, setError] = useState('');
     const [loggingOut, setLoggingOut] = useState(false);
     const { user, initializing, logout } = useUser();
+
+    const activeLinkClass = ({ isActive }) => {
+        const baseClass = "nav-link fw-semibold"
+
+        return isActive
+        ? `${baseClass} active border-bottom border-2 border-primary`
+        : `${baseClass} text-dark`
+    }
 
     const logoutHandler = async () => {
         if (loggingOut) {
@@ -58,22 +66,22 @@ export default function Header() {
                 <div className="collapse navbar-collapse" id="mainNavigation">
                     <ul className="navbar-nav mx-auto gap-lg-4">
                         <li className="nav-item">
-                            <Link to="/" className="nav-link active fw-semibold border-bottom border-2">
+                            <NavLink to="/" className={activeLinkClass}>
                                 Home
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li className="nav-item">
-                            <Link to="/trails" className="nav-link text-dark">
+                            <NavLink to="/trails" className={activeLinkClass}>
                                 Explore
-                            </Link>
+                            </NavLink>
                         </li>
 
                         {!initializing && user && (
                             <li className="nav-item">
-                                <Link to="/my-trails" className="nav-link text-dark">
+                                <NavLink to="/my-trails" className={activeLinkClass}>
                                     My Trails
-                                </Link>
+                                </NavLink>
                             </li>
                         )}
                     </ul>
