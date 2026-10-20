@@ -56,12 +56,20 @@ export default function TrailDetails() {
 
     const isOwner = Boolean(!initializing && user && user.id === trail.ownerId);
 
-    const usernameInitial = `${trail?.owner.username[0].toUpperCase()}`;
-    const username = `${trail?.owner?.username[0].toUpperCase()}${trail?.owner?.username.slice(1)}`;
+    const rawUsername = trail.owner?.username?.trim() || '';
+
+    const username = rawUsername
+    ? `${rawUsername[0].toUpperCase()}${rawUsername.slice(1)}`
+    : 'TrailQuest member';
+
+    const usernameInitial = rawUsername
+    ? rawUsername[0].toUpperCase()
+    : TQ;
+    
     const dateObj = new Date(trail?.owner?.created_at);
 
     const year = dateObj.getUTCFullYear();
-    const month = dateObj.getUTCMonth();
+    const month = dateObj.getUTCMonth() + 1;
     const day = dateObj.getUTCDate();
     
     const deleteTrailHandler = async () => {

@@ -18,7 +18,7 @@ export default function HomeTrails() {
 
         const loadLatestTrails = async () => {
             try {
-                const data = await getLatestTrails(controller.signal.aborted);
+                const data = await getLatestTrails(controller.signal);
 
                 if (!controller.signal.aborted) {
                     setTrails(data);
