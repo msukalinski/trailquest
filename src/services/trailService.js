@@ -76,11 +76,17 @@ export async function getTrails(signal, {
     };
 }
 
-export async function getMyTrails(userId, signal) {
-    const query = supabase
+export async function getMyTrails(userId, signal, { sort = 'newest' } = {}) {
+    let query = supabase
         .from('trails')
         .select('*')
         .eq('ownerId', userId);
+
+    if (sort === 'newest') {
+        query.order('createdAt', { ascending: false });
+    } else {
+        query.order('createdAt', { ascending: true });
+    }
 
     if (signal) {
         query.abortSignal(signal);

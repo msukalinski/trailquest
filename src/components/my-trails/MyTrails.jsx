@@ -12,9 +12,16 @@ import './MyTrails.css'
 
 export default function MyTrails() {
     const [loadResult, setLoadResult] = useState(null);
+    const [sort, setSort] = useState('newest');
+
     const { user, initializing } = useUser();
     const userId = user?.id;
-    const currentResult = loadResult?.userId === userId ? loadResult : null;
+
+    const currentResult = loadResult?.userId === userId &&
+        loadResult?.sort === sort
+        ? loadResult
+        : null;
+
     const trails = currentResult?.trails ?? [];
     const error = currentResult?.error;
     const loading = !currentResult;
@@ -30,15 +37,24 @@ export default function MyTrails() {
 
         const loadUserTrails = async () => {
             try {
-                const data = await getMyTrails(userId, controller.signal);
+                const data = await getMyTrails(
+                    userId,
+                    controller.signal,
+                    { sort }
+                );
 
                 if (!controller.signal.aborted) {
-                    setLoadResult({ userId, trails: data });
+                    setLoadResult({
+                        userId,
+                        sort,
+                        trails: data
+                    });
                 }
             } catch (err) {
                 if (!controller.signal.aborted) {
                     setLoadResult({
                         userId,
+                        sort,
                         error: err?.message || 'Could not load your trails.'
                     });
                 }
@@ -48,7 +64,7 @@ export default function MyTrails() {
         loadUserTrails();
 
         return () => controller.abort();
-    }, [initializing, userId]);
+    }, [initializing, userId, sort]);
 
     const deleteTrailHandler = async (id, title) => {
         if (!userId || deletingId) {
@@ -157,32 +173,17 @@ export default function MyTrails() {
                         </div>
 
                         <div className="my-trails-toolbar-controls">
-                            <div className="my-trails-filter-buttons" aria-label="Filter trails">
-                                <button type="button" className="active">
-                                    All
-                                </button>
 
-                                <button type="button">
-                                    Published
-                                </button>
 
-                                <button type="button">
-                                    Drafts
-                                </button>
-                            </div>
-
-                            <select className="form-select" aria-label="Sort trails" defaultValue="newest">
-                                <option value="newest">
-                                    Newest first
-                                </option>
-
-                                <option value="oldest">
-                                    Oldest first
-                                </option>
-
-                                <option value="popular">
-                                    Most popular
-                                </option>
+                            <select
+                                className="form-select"
+                                aria-label="Sort trails"
+                                value={sort}
+                                onChange={(event) => setSort(event.target.value)}
+                                disabled={loading || Boolean(deletingId)}
+                            >
+                                <option value="newest">Newest first</option>
+                                <option value="oldest">Oldest first</option>
                             </select>
                         </div>
                     </div>
