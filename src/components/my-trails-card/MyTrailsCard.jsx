@@ -10,7 +10,6 @@ export default function MyTrailsCard({
     description,
     distance,
     difficulty,
-    difficultyClass,
     status,
     statusClass,
     // views,

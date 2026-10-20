@@ -64,7 +64,7 @@ export default function TrailDetails() {
 
     const usernameInitial = rawUsername
         ? rawUsername[0].toUpperCase()
-        : TQ;
+        : 'TQ';
 
     const joinedAt = trail.owner?.created_at
         ? new Date(trail.owner.created_at)
