@@ -59,19 +59,21 @@ export default function TrailDetails() {
     const rawUsername = trail.owner?.username?.trim() || '';
 
     const username = rawUsername
-    ? `${rawUsername[0].toUpperCase()}${rawUsername.slice(1)}`
-    : 'TrailQuest member';
+        ? `${rawUsername[0].toUpperCase()}${rawUsername.slice(1)}`
+        : 'TrailQuest member';
 
     const usernameInitial = rawUsername
-    ? rawUsername[0].toUpperCase()
-    : TQ;
-    
-    const dateObj = new Date(trail?.owner?.created_at);
+        ? rawUsername[0].toUpperCase()
+        : TQ;
 
-    const year = dateObj.getUTCFullYear();
-    const month = dateObj.getUTCMonth() + 1;
-    const day = dateObj.getUTCDate();
-    
+    const joinedAt = trail.owner?.created_at
+        ? new Date(trail.owner.created_at)
+        : null;
+
+    const memberSince = joinedAt && !Number.isNaN(joinedAt.getTime())
+        ? `${joinedAt.getUTCDate()}.${joinedAt.getUTCMonth() + 1}.${joinedAt.getUTCFullYear()}`
+        : null;
+
     const deleteTrailHandler = async () => {
         if (!isOwner) {
             return;
@@ -294,7 +296,7 @@ export default function TrailDetails() {
                                     <div>
                                         <strong>{username}</strong>
                                         {!trail.owner && <span>Profile unavailable</span>}
-                                        <span>Member since {`${day}.${month}.${year}`}</span>
+                                        <span>Member since {memberSince}</span>
                                     </div>
                                 </div>
 
