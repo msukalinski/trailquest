@@ -7,12 +7,14 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router';
 import UserProvider from './providers/UserProvider.jsx';
+import { Toaster } from 'react-hot-toast';
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
 		<BrowserRouter>
 			<UserProvider>
 				<App />
+				<Toaster position='top-right' />
 			</UserProvider>
 		</BrowserRouter>
 	</StrictMode>

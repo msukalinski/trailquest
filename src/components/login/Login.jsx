@@ -6,6 +6,7 @@ import useForm from "../../hooks/useForm";
 import { login } from "../../services/userService";
 
 import './Login.css';
+import toast from "react-hot-toast";
 
 export default function Login() {
     const { state } = useLocation();
@@ -30,6 +31,22 @@ export default function Login() {
             await login({
                 email: trimmedEmail,
                 password
+            });
+
+            toast.success('Logged in successfully.', {
+                duration: 2500,
+                style: {
+                    background: '#fff4f2',
+                    color: '#7f2d2d',
+                    border: '1px solid #efc2bd',
+                    borderRadius: '12px',
+                    padding: '14px 18px',
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    lineHeight: 1.5,
+                    maxWidth: '420px',
+                    boxShadow: '0 8px 24px rgba(127, 45, 45, 0.12)',
+                }
             });
 
             navigate('/');
