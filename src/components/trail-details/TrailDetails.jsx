@@ -8,16 +8,22 @@ import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 import NotFound from "../not-found/NotFound";
 import './TrailDetails.css'
+import { isTrailSaved, saveTrail, unsaveTrail } from "../../services/favouriteService";
 
 export default function TrailDetails() {
     const { trailId } = useParams();
     const navigate = useNavigate();
     const { user, initializing } = useUser();
+    const userId = user?.id;
 
     const [trail, setTrail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    const [isSaved, setIsSaved] = useState(false);
+    const [checkingFavourite, setCheckingFavourite] = useState(true);
+    const [updatingFavourite, setUpdatingFavourite] = useState(false);
+    const [favouriteError, setFavouriteError] = useState('');
 
     useEffect(() => {
         const controller = new AbortController();
@@ -50,11 +56,83 @@ export default function TrailDetails() {
 
     }, [trailId]);
 
+    useEffect(() => {
+        if (initializing) {
+            return;
+        }
+
+        if (!userId) {
+            setIsSaved(false);
+            setCheckingFavourite(false);
+            setFavouriteError('');
+            return;
+        }
+
+        const controller = new AbortController();
+
+        const loadFavouriteStatus = async () => {
+            setCheckingFavourite(true);
+            setFavouriteError('');
+            setIsSaved(false);
+
+            try {
+                const saved = await isTrailSaved(trailId, userId, controller.signal);
+
+                if (!controller.signal.aborted) {
+                    setIsSaved(saved);
+                }
+            } catch (err) {
+                if (!controller.signal.aborted) {
+                    console.error(err);
+                    setFavouriteError(err?.message || 'Could not load saved status');
+                }
+            } finally {
+                if (!controller.signal.aborted) {
+                    setCheckingFavourite(false);
+                }
+            }
+        }
+
+        loadFavouriteStatus();
+
+        return () => controller.abort();
+    }, [trailId, userId, initializing]);
+
+    const toggleFavouriteClickHandler = async () => {
+        if (initializing || checkingFavourite || updatingFavourite) {
+            return;
+        }
+
+        if (!userId || trail.ownerId === userId) {
+            return;
+        }
+
+        setFavouriteError('');
+        setUpdatingFavourite(true);
+
+        try {
+            if (isSaved) {
+                await unsaveTrail(trailId, userId);
+                setIsSaved(false);
+            } else {
+                await saveTrail(trailId, userId);
+                setIsSaved(true);
+            }
+        } catch (err) {
+            setFavouriteError(err?.message || 'Could not update your saved trails');
+        } finally {
+            setUpdatingFavourite(false);
+        }
+    }
+
+
     if (loading) return <Loader />;
     if (error) return <ErrorMessage message={error} />;
     if (!trail) return <NotFound />;
 
     const isOwner = Boolean(!initializing && user && user.id === trail.ownerId);
+
+    const canSaveTrail = !initializing && Boolean(userId) && trail.ownerId !== userId;
 
     const rawUsername = trail.owner?.username?.trim() || '';
 
@@ -199,16 +277,35 @@ export default function TrailDetails() {
                                 Share
                             </button>
 
-                            <button
-                                type="button"
-                                className="trail-details-favourite-button"
-                            >
-                                <i
-                                    className="bi bi-heart"
-                                    aria-hidden="true"
-                                />
-                                Save trail
-                            </button>
+                            {canSaveTrail && (
+                                <button
+                                    type="button"
+                                    className="trail-details-favourite-button"
+                                    onClick={toggleFavouriteClickHandler}
+                                    disabled={checkingFavourite || updatingFavourite}
+                                    aria-pressed={isSaved}
+                                >
+                                    <i
+                                        className={`bi ${isSaved ? 'bi-heart-fill' : 'bi-heart'}`}
+                                        aria-hidden="true"
+                                    />
+
+                                    {checkingFavourite
+                                        ? 'Checking...'
+                                        : updatingFavourite
+                                            ? 'Updating'
+                                            : isSaved
+                                                ? 'Saved'
+                                                : 'Save trail'}
+                                </button>
+
+                            )}
+
+                            {favouriteError && (
+                                <p className="text-danger mt-2" role="alert">
+                                    {favouriteError}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -323,7 +420,7 @@ export default function TrailDetails() {
                                 </div>
                             </section>
 
-                            {/* Show only to the trail owner later */}
+                            {/* Show only to the trail owner */}
                             {isOwner && (
                                 <section className="trail-details-owner-card">
                                     <p>Owner controls</p>
