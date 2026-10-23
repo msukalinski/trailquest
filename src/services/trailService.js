@@ -125,11 +125,11 @@ export async function getLatestTrails(signal) {
     return data;
 }
 
-export async function getTrailById(id, signal) {
+export async function getTrailById(trailId, signal) {
     const query = supabase
         .from('trails')
-        .select('*')
-        .eq('id', id)
+        .select('*, favourites(count)')
+        .eq('id', trailId)
         .maybeSingle();
 
     if (signal) {
@@ -150,7 +150,11 @@ export async function getTrailById(id, signal) {
         ? await getProfile(data.ownerId, signal)
         : null;
 
-    return { ...data, owner };
+    return {
+        ...data,
+        favourites: data.favourites?.[0]?.count ?? 0,
+        owner
+    };
 }
 
 export async function createTrail(newTrail) {

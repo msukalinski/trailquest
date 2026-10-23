@@ -430,6 +430,22 @@ export default function TrailDetails() {
                                 <section className="trail-details-owner-card">
                                     <p>Owner controls</p>
 
+                                    <p className="d-flex align-items-center gap-2 text-muted mb-3">
+                                        <i
+                                            className="bi bi-heart-fill text-danger"
+                                            aria-hidden="true"
+                                        />
+
+                                        <span>
+                                            {trail.favourites === 0
+                                                ? 'No saves yet'
+                                                : `Saved by ${trail.favourites} ${trail.favourites === 1
+                                                    ? 'hiker'
+                                                    : 'hikers'
+                                                }`}
+                                        </span>
+                                    </p>
+
                                     <Link
                                         to={`/trails/${trail.id}/edit`}
                                         className="trail-details-edit-button"

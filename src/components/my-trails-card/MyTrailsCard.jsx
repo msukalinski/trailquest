@@ -104,3 +104,12 @@ export default function MyTrailsCard({
         </article>
     );
 }
+
+<span>
+    {trail.favourites === 0
+        ? 'No saves yet'
+        : `Saved by ${trail.favourites} ${trail.favourites === 1
+            ? 'hiker'
+            : 'hikers'
+        }`}
+</span>
