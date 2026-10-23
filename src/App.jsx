@@ -8,6 +8,8 @@ import EditTrail from "./components/edit-trail/EditTrail"
 import MyTrails from "./components/my-trails/MyTrails"
 import Login from "./components/login/Login"
 import Register from "./components/register/Register"
+import About from "./components/about/About"
+import Terms from "./components/terms/Terms"
 import NotFound from "./components/not-found/NotFound"
 
 import GuestGuard from "./guards/GuestGuard"
@@ -23,6 +25,8 @@ function App() {
 					<Route path="/" element={<Home />} />
 					<Route path="/trails" element={<TrailsCatalog />} />
 					<Route path="/trails/:trailId/details" element={<TrailDetails />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/terms" element={<Terms />} />
 
 					<Route element={<GuestGuard />}>
 						<Route path="/login" element={<Login />} />
