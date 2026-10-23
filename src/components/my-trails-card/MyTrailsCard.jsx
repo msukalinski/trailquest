@@ -12,7 +12,6 @@ export default function MyTrailsCard({
     difficulty,
     status,
     statusClass,
-    // views,
     favourites,
     onDelete,
     deletingId
@@ -54,11 +53,6 @@ export default function MyTrailsCard({
                         <i className="bi bi-signpost-2" aria-hidden="true" />
                         {distance}
                     </span>
-
-                    {/* <span>
-                        <i className="bi bi-eye" aria-hidden="true" />
-                        {views} views
-                    </span> */}
 
                     <span>
                         <i className="bi bi-heart" aria-hidden="true" />
