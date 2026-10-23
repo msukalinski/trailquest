@@ -25,11 +25,11 @@ export default function HomeTrailCard({
                         alt={title}
                     />
 
-                    <span
+                    {/* <span
                         className="position-absolute top-0 end-0 bg-white rounded-circle d-flex align-items-center justify-content-center m-3 shadow-sm"
                     >
                         <i className="bi bi-heart fs-5" />
-                    </span>
+                    </span> */}
                 </div>
 
                 <div className="card-body">
