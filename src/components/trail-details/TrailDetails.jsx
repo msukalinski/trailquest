@@ -277,7 +277,7 @@ export default function TrailDetails() {
                                 Share
                             </button>
 
-                            {canSaveTrail && (
+                            {canSaveTrail ? (
                                 <button
                                     type="button"
                                     className="trail-details-favourite-button"
@@ -299,7 +299,12 @@ export default function TrailDetails() {
                                                 : 'Save trail'}
                                 </button>
 
-                            )}
+                            ) : isOwner ? (
+                                <span className="trail-details-your-trail">
+                                    <i className="bi bi-person-check-fill me-2" aria-hidden="true" />
+                                    Your trail
+                                </span>
+                            ) : null}
 
                             {favouriteError && (
                                 <p className="text-danger mt-2" role="alert">
