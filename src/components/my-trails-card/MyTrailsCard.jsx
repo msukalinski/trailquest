@@ -9,6 +9,8 @@ export default function MyTrailsCard({
     location,
     description,
     distance,
+    duration,
+    elevation,
     difficulty,
     status,
     statusClass,
@@ -52,6 +54,16 @@ export default function MyTrailsCard({
                     <span>
                         <i className="bi bi-signpost-2" aria-hidden="true" />
                         {distance}
+                    </span>
+
+                    <span>
+                        <i className="bi bi-clock" aria-hidden="true" />
+                        {duration}
+                    </span>
+
+                    <span>
+                        <i className="bi bi-graph-up-arrow" aria-hidden="true" />
+                        {elevation}
                     </span>
 
                     <span>
