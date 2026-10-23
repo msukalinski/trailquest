@@ -159,7 +159,7 @@ export default function MyTrails() {
                                 <strong>
                                     {loading ? '...' : error ? '-' : currentResult.totalFavourites}
                                 </strong>
-                                <span>Total favourites</span>
+                                <span>Hikers saved your trails</span>
                             </div>
                         </div>
                     </div>
