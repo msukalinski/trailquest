@@ -62,3 +62,26 @@ export async function unsaveTrail(trailId, userId) {
 
     return data;
 }
+
+export async function getTotalFavouritesReceived(userId, signal) {
+    let query = supabase
+        .from('favourites')
+        .select('trailId, trails!inner(ownerId)', {
+            count: 'exact',
+            head: true
+        })
+        .eq('trails.ownerId', userId);
+
+    if (signal) {
+        query = query.abortSignal(signal);
+    }
+
+    const { count, error } = await query
+
+
+    if (error) {
+        throw (error);
+    }
+
+    return count ?? 0;
+}

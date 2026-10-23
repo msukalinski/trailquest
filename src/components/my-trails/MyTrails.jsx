@@ -9,6 +9,7 @@ import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 
 import './MyTrails.css'
+import { getTotalFavouritesReceived } from "../../services/favouriteService";
 
 export default function MyTrails() {
     const [loadResult, setLoadResult] = useState(null);
@@ -37,17 +38,17 @@ export default function MyTrails() {
 
         const loadUserTrails = async () => {
             try {
-                const data = await getMyTrails(
-                    userId,
-                    controller.signal,
-                    { sort }
-                );
+                const [data, totalFavourites] = await Promise.all([
+                    getMyTrails(userId, controller.signal, { sort }),
+                    getTotalFavouritesReceived(userId, controller.signal)
+                ]);
 
                 if (!controller.signal.aborted) {
                     setLoadResult({
                         userId,
                         sort,
-                        trails: data
+                        trails: data,
+                        totalFavourites
                     });
                 }
             } catch (err) {
@@ -83,6 +84,8 @@ export default function MyTrails() {
         try {
             await deleteTrail(id);
 
+            const totalFavourites = await getTotalFavouritesReceived(userId);
+
             setLoadResult(current => {
                 if (current?.userId !== userId || !current?.trails) {
                     return current;
@@ -91,6 +94,7 @@ export default function MyTrails() {
                 return {
                     ...current,
                     trails: current.trails.filter(trail => trail.id !== id),
+                    totalFavourites
                 };
             });
         } catch (err) {
@@ -152,7 +156,9 @@ export default function MyTrails() {
                             </div>
 
                             <div>
-                                <strong>284</strong>
+                                <strong>
+                                    {loading ? '...' : error ? '-' : currentResult.totalFavourites}
+                                </strong>
                                 <span>Total favourites</span>
                             </div>
                         </div>
