@@ -8,7 +8,7 @@
             rgba(8, 25, 19, 0.75) 0%,
             rgba(8, 25, 19, 0.38) 45%,
             rgba(8, 25, 19, 0.05) 100%),
-        url('/public/home.jpg');
+        url('/home.jpg');
     background-position: center 65%;
     background-size: cover;
     background-repeat: no-repeat;

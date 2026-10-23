@@ -13,7 +13,7 @@
         linear-gradient(90deg,
             rgba(7, 29, 20, 0.86),
             rgba(7, 29, 20, 0.3)),
-        url("/public/home.jpg");
+        url("/home.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
