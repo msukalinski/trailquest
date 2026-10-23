@@ -9,10 +9,11 @@ export default function MyTrailsCard({
     location,
     description,
     distance,
+    duration,
+    elevation,
     difficulty,
     status,
     statusClass,
-    // views,
     favourites,
     onDelete,
     deletingId
@@ -55,10 +56,15 @@ export default function MyTrailsCard({
                         {distance}
                     </span>
 
-                    {/* <span>
-                        <i className="bi bi-eye" aria-hidden="true" />
-                        {views} views
-                    </span> */}
+                    <span>
+                        <i className="bi bi-clock" aria-hidden="true" />
+                        {duration}
+                    </span>
+
+                    <span>
+                        <i className="bi bi-graph-up-arrow" aria-hidden="true" />
+                        {elevation}
+                    </span>
 
                     <span>
                         <i className="bi bi-heart" aria-hidden="true" />

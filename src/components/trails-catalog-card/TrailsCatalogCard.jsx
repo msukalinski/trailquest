@@ -29,12 +29,12 @@ export default function TrailsCatalogCard({
                     {difficulty}
                 </span>
 
-                <span
+                {/* <span
                     className="catalog-favourite"
                     aria-hidden="true"
                 >
                     <i className="bi bi-heart" />
-                </span>
+                </span> */}
             </div>
 
             <div className="catalog-card-content">

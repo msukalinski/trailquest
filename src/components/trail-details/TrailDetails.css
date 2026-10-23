@@ -241,6 +241,21 @@
     transform: translateY(-2px);
 }
 
+.trail-details-your-trail {
+    display: 'inline-flex';
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1rem;
+    background-color: #eef5f0;
+    color: #315640;
+    border: 1px solid #d7e5dc;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: 'nowrap';
+}
+
 /* Main content */
 
 .trail-details-content {

@@ -76,17 +76,18 @@ export async function getTrails(signal, {
     };
 }
 
-export async function getMyTrails(userId, signal, { sort = 'newest' } = {}) {
+export async function getMyTrails(
+    userId,
+    signal,
+    { sort = 'newest' } = {}
+) {
     let query = supabase
         .from('trails')
-        .select('*')
-        .eq('ownerId', userId);
-
-    if (sort === 'newest') {
-        query.order('createdAt', { ascending: false });
-    } else {
-        query.order('createdAt', { ascending: true });
-    }
+        .select('*, favourites(count)')
+        .eq('ownerId', userId)
+        .order('createdAt', {
+            ascending: sort === 'oldest'
+        });
 
     if (signal) {
         query.abortSignal(signal);
@@ -98,7 +99,10 @@ export async function getMyTrails(userId, signal, { sort = 'newest' } = {}) {
         throw error;
     }
 
-    return data;
+    return (data ?? []).map(trail => ({
+        ...trail,
+        favourites: trail.favourites?.[0]?.count ?? 0,
+    }));
 }
 
 export async function getLatestTrails(signal) {
@@ -121,11 +125,11 @@ export async function getLatestTrails(signal) {
     return data;
 }
 
-export async function getTrailById(id, signal) {
+export async function getTrailById(trailId, signal) {
     const query = supabase
         .from('trails')
-        .select('*')
-        .eq('id', id)
+        .select('*, favourites(count)')
+        .eq('id', trailId)
         .maybeSingle();
 
     if (signal) {
@@ -146,7 +150,11 @@ export async function getTrailById(id, signal) {
         ? await getProfile(data.ownerId, signal)
         : null;
 
-    return { ...data, owner };
+    return {
+        ...data,
+        favourites: data.favourites?.[0]?.count ?? 0,
+        owner
+    };
 }
 
 export async function createTrail(newTrail) {
@@ -201,7 +209,6 @@ export async function deleteTrail(id) {
         .select('id')
         .maybeSingle();
 
-    console.log('trail:', { data, error });
 
     if (error) {
         throw (error);

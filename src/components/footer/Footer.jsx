@@ -25,7 +25,7 @@ export default function Footer() {
                             <span className="vr d-none d-sm-block" />
 
                             <span className="text-secondary">
-                                Hiking together for a brighter tomorrow.
+                                Find your path. Share the journey.
                             </span>
                         </div>
                     </div>
@@ -37,13 +37,6 @@ export default function Footer() {
                                 className="text-decoration-none text-secondary"
                             >
                                 About
-                            </Link>
-
-                            <Link
-                                to="/community"
-                                className="text-decoration-none text-secondary"
-                            >
-                                Community
                             </Link>
 
                             <Link

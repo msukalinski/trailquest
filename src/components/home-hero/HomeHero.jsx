@@ -26,16 +26,11 @@ export default function HomeHero() {
 
                     <div className="col-lg-5 d-none d-lg-flex justify-content-end">
                         <p className="fs-3 text-end lh-sm">
-                            Higher stories
+                            Quiet peaks
                             <br />
-                            Brighter days
+                            Loud memories
                         </p>
                     </div>
-                </div>
-
-                <div className="position-absolute bottom-0 end-0 mb-5 me-4 d-none d-md-flex align-items-center gap-2">
-                    <i className="bi bi-geo-alt-fill" />
-                    <span>Seven Rila Lakes, Bulgaria</span>
                 </div>
             </div>
         </section>

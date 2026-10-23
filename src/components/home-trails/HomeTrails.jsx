@@ -1,13 +1,16 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 
-import HomeTrailCard from '../home-trail-card/HomeTrailCard';
 import { getLatestTrails } from '../../services/trailService';
-import './HomeTrails.css';
+
+import HomeTrailCard from '../home-trail-card/HomeTrailCard';
 import Loader from '../loader/Loader';
 import ErrorMessage from '../error-message/ErrorMessage';
 
+import './HomeTrails.css';
+
 export default function HomeTrails() {
+    const navigate = useNavigate();
 
     const [trails, setTrails] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -62,7 +65,11 @@ export default function HomeTrails() {
             ) : (
                 <div className='row g-4'>
                     {trails.map(trail => (
-                        <HomeTrailCard key={trail.id} {...trail} />
+                        <HomeTrailCard
+                            key={trail.id}
+                            {...trail}
+                            onClick={() => navigate(`/trails/${trail.id}/details`)}
+                        />
                     ))}
                 </div>
             )}

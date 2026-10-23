@@ -277,7 +277,7 @@ export default function TrailDetails() {
                                 Share
                             </button>
 
-                            {canSaveTrail && (
+                            {canSaveTrail ? (
                                 <button
                                     type="button"
                                     className="trail-details-favourite-button"
@@ -299,7 +299,12 @@ export default function TrailDetails() {
                                                 : 'Save trail'}
                                 </button>
 
-                            )}
+                            ) : isOwner ? (
+                                <span className="trail-details-your-trail">
+                                    <i className="bi bi-person-check-fill me-2" aria-hidden="true" />
+                                    Your trail
+                                </span>
+                            ) : null}
 
                             {favouriteError && (
                                 <p className="text-danger mt-2" role="alert">
@@ -424,6 +429,22 @@ export default function TrailDetails() {
                             {isOwner && (
                                 <section className="trail-details-owner-card">
                                     <p>Owner controls</p>
+
+                                    <p className="d-flex align-items-center gap-2 text-muted mb-3">
+                                        <i
+                                            className="bi bi-heart-fill text-danger"
+                                            aria-hidden="true"
+                                        />
+
+                                        <span>
+                                            {trail.favourites === 0
+                                                ? 'No saves yet'
+                                                : `Saved by ${trail.favourites} ${trail.favourites === 1
+                                                    ? 'hiker'
+                                                    : 'hikers'
+                                                }`}
+                                        </span>
+                                    </p>
 
                                     <Link
                                         to={`/trails/${trail.id}/edit`}

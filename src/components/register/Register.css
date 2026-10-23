@@ -33,7 +33,7 @@
         linear-gradient(180deg,
             rgba(9, 30, 22, 0.18) 0%,
             rgba(9, 30, 22, 0.86) 100%),
-        url("https://upload.wikimedia.org/wikipedia/commons/b/bc/7_Ezera.jpg");
+        url("/register.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
