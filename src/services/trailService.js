@@ -209,7 +209,6 @@ export async function deleteTrail(id) {
         .select('id')
         .maybeSingle();
 
-    console.log('trail:', { data, error });
 
     if (error) {
         throw (error);

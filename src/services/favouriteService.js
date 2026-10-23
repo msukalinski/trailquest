@@ -13,7 +13,7 @@ export async function isTrailSaved(trailId, userId, signal) {
         .maybeSingle();
 
     if (signal) {
-        query = query.abortSignal();
+        query = query.abortSignal(signal);
     }
 
     const { data, error } = await query;
