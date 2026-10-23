@@ -10,12 +10,13 @@ export default function HomeTrailCard({
     location,
     distance,
     duration,
-    difficulty
+    difficulty,
+    onClick
 }) {
 
 
     return (
-        <div className="col-md-6 col-xl-4">
+        <div className="col-md-6 col-xl-4" onClick={onClick}>
             <article className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                 <div className="position-relative ratio ratio-16x9">
                     <img
