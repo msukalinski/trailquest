@@ -7,7 +7,7 @@ export default function Terms() {
         <div className="terms-content">
           <header className="terms-hero">
             <span className="terms-label">
-              <i className="bi bi-file-text" aria-hidden="true" />
+              <i className="bi bi-file-text-fill" aria-hidden="true" />
               Legal
             </span>
 

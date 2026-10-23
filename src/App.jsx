@@ -14,6 +14,7 @@ import NotFound from "./components/not-found/NotFound"
 
 import GuestGuard from "./guards/GuestGuard"
 import AuthGuard from "./guards/AuthGuard"
+import Privacy from "./components/privacy/Privacy"
 // import Loader from "./components/shared/loader/Loader"
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
 					<Route path="/trails/:trailId/details" element={<TrailDetails />} />
 					<Route path="/about" element={<About />} />
 					<Route path="/terms" element={<Terms />} />
+					<Route path="/privacy" element={<Privacy />} />
 
 					<Route element={<GuestGuard />}>
 						<Route path="/login" element={<Login />} />
