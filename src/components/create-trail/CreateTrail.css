@@ -13,8 +13,8 @@
         linear-gradient(90deg,
             rgba(7, 29, 20, 0.84),
             rgba(7, 29, 20, 0.3)),
-        url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL0MV_23GkyqeOX8l655OTWIq8VbycSq-Nm3xbSfXUhxo00TebAhiAjbe7&s=10");
-    background-position: center;
+        url("/public/catalog-hero.jpg");
+    background-position: center 45%;
     background-size: cover;
     background-repeat: no-repeat;
 }
