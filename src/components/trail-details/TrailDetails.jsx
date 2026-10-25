@@ -398,7 +398,9 @@ export default function TrailDetails() {
                                     <div>
                                         <strong>{username}</strong>
                                         {!trail.owner && <span>Profile unavailable</span>}
-                                        <span>Member since {memberSince}</span>
+                                        {memberSince &&
+                                            <span>Member since {memberSince}</span>
+                                        }
                                     </div>
                                 </div>
 
