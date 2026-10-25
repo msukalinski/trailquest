@@ -15,6 +15,7 @@ import NotFound from "./components/not-found/NotFound"
 
 import GuestGuard from "./guards/GuestGuard"
 import AuthGuard from "./guards/AuthGuard"
+import Favourites from "./components/favourites/Favourites"
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
 						<Route path="/trails/create" element={<CreateTrail />} />
 						<Route path="/trails/:trailId/edit" element={<EditTrail />} />
 						<Route path="/my-trails" element={<MyTrails />} />
+						<Route path="/favourite-trails" element={<Favourites />} />
 					</Route>
 
 					<Route path="*" element={<NotFound />} />

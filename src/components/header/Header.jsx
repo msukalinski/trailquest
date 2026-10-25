@@ -15,8 +15,8 @@ export default function Header() {
         const baseClass = "nav-link fw-semibold"
 
         return isActive
-        ? `${baseClass} active border-bottom border-2 border-primary`
-        : `${baseClass} text-dark`
+            ? `${baseClass} active border-bottom border-2 border-primary`
+            : `${baseClass} text-dark`
     }
 
     const logoutHandler = async () => {
@@ -78,11 +78,19 @@ export default function Header() {
                         </li>
 
                         {!initializing && user && (
-                            <li className="nav-item">
-                                <NavLink to="/my-trails" className={activeLinkClass}>
-                                    My Trails
-                                </NavLink>
-                            </li>
+                            <>
+                                <li className="nav-item">
+                                    <NavLink to="/my-trails" className={activeLinkClass}>
+                                        My Trails
+                                    </NavLink>
+                                </li>
+
+                                <li className="nav-item">
+                                    <NavLink to="/favourite-trails" className={activeLinkClass}>
+                                        Favourites
+                                    </NavLink>
+                                </li>
+                            </>
                         )}
                     </ul>
 
