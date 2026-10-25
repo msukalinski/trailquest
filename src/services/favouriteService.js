@@ -93,9 +93,9 @@ export async function getFavouriteTrails(userId, signal, { sort = 'newest' } = {
 
     let query = supabase
         .from('favourites')
-        .select('createdAt, trail:trails!inner(*)')
+        .select('created_at, trail:trails!inner(*)')
         .eq('userId', userId)
-        .order('createdAt', { ascending: sort === 'oldest' })
+        .order('created_at', { ascending: sort === 'oldest' })
         .order('trailId', { ascending: true });
 
     if (signal) {
@@ -110,8 +110,8 @@ export async function getFavouriteTrails(userId, signal, { sort = 'newest' } = {
 
     return (data ?? [])
         .filter(({ trail }) => Boolean(trail))
-        .map(({ trail, createdAt }) => ({
+        .map(({ trail, created_at }) => ({
             ...trail,
-            savedAt: createdAt
+            savedAt: created_at
         }));
 }
