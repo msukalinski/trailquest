@@ -88,7 +88,7 @@
         background-image:
             linear-gradient(rgba(8, 25, 19, 0.68),
                 rgba(8, 25, 19, 0.52)),
-            url("https://upload.wikimedia.org/wikipedia/commons/b/bc/7_Ezera.jpg");
+            url("/home.jpg");
         background-position: center;
     }
 
