@@ -394,6 +394,9 @@ Ownership checks hide management actions from other users and prevent them from 
 
 ## Deployment
 The frontend is deployed with Cloudflare:
+
 https://trailquest.msukalinski.workers.dev/
+
 The backend is hosted by Supabase.
+
 No separate custom backend server deployment is required because the project uses Supabase as a hosted Backend-as-a-Service.
