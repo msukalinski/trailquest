@@ -85,3 +85,33 @@ export async function getTotalFavouritesReceived(userId, signal) {
 
     return count ?? 0;
 }
+
+export async function getFavouriteTrails(userId, signal, { sort = 'newest' } = {}) {
+    if (!userId) {
+        return [];
+    }
+
+    let query = supabase
+        .from('favourites')
+        .select('createdAt, trail:trails!inner(*)')
+        .eq('userId', userId)
+        .order('createdAt', { ascending: sort === 'oldest' })
+        .order('trailId', { ascending: true });
+
+    if (signal) {
+        query = query.abortSignal(signal);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        throw error;
+    }
+
+    return (data ?? [])
+        .filter(({ trail }) => Boolean(trail))
+        .map(({ trail, createdAt }) => ({
+            ...trail,
+            savedAt: createdAt
+        }));
+}
