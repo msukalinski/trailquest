@@ -20,10 +20,19 @@ export default function TrailDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const [isSaved, setIsSaved] = useState(false);
-    const [checkingFavourite, setCheckingFavourite] = useState(true);
+    const [favouriteResult, setFavouriteResult] = useState(null);
     const [updatingFavourite, setUpdatingFavourite] = useState(false);
-    const [favouriteError, setFavouriteError] = useState('');
+
+    const currentFavourite =
+        userId &&
+            favouriteResult?.userId === userId &&
+            favouriteResult?.trailId === trailId
+            ? favouriteResult
+            : null;
+
+    const isSaved = currentFavourite?.isSaved ?? false;
+    const checkingFavourite = initializing || Boolean(userId && !currentFavourite);
+    const favouriteError = currentFavourite?.error ?? '';
 
     useEffect(() => {
         const controller = new AbortController();
@@ -57,38 +66,33 @@ export default function TrailDetails() {
     }, [trailId]);
 
     useEffect(() => {
-        if (initializing) {
-            return;
-        }
-
-        if (!userId) {
-            setIsSaved(false);
-            setCheckingFavourite(false);
-            setFavouriteError('');
+        if (initializing || !userId) {
             return;
         }
 
         const controller = new AbortController();
 
         const loadFavouriteStatus = async () => {
-            setCheckingFavourite(true);
-            setFavouriteError('');
-            setIsSaved(false);
 
             try {
                 const saved = await isTrailSaved(trailId, userId, controller.signal);
 
                 if (!controller.signal.aborted) {
-                    setIsSaved(saved);
+                    setFavouriteResult({
+                        userId,
+                        trailId,
+                        isSaved: saved,
+                        error: ''
+                    });
                 }
             } catch (err) {
                 if (!controller.signal.aborted) {
-                    console.error(err);
-                    setFavouriteError(err?.message || 'Could not load saved status');
-                }
-            } finally {
-                if (!controller.signal.aborted) {
-                    setCheckingFavourite(false);
+                    setFavouriteResult({
+                        userId,
+                        trailId,
+                        isSaved: false,
+                        error: err?.message || 'Could not load saved status.'
+                    });
                 }
             }
         }
@@ -99,27 +103,33 @@ export default function TrailDetails() {
     }, [trailId, userId, initializing]);
 
     const toggleFavouriteClickHandler = async () => {
-        if (initializing || checkingFavourite || updatingFavourite) {
+        if (!canSaveTrail || checkingFavourite || updatingFavourite) {
             return;
         }
 
-        if (!userId || trail.ownerId === userId) {
-            return;
+        const updateCurrentFavourite = (changes) => {
+            setFavouriteResult(current => {
+                if (current?.userId !== userId || current?.trailId !== trailId) {
+                    return current;
+                }
+
+                return { ...current, ...changes };
+            })
         }
 
-        setFavouriteError('');
         setUpdatingFavourite(true);
+        updateCurrentFavourite({ error: '' });
 
         try {
             if (isSaved) {
                 await unsaveTrail(trailId, userId);
-                setIsSaved(false);
             } else {
                 await saveTrail(trailId, userId);
-                setIsSaved(true);
             }
+
+            updateCurrentFavourite({ isSaved: !isSaved });
         } catch (err) {
-            setFavouriteError(err?.message || 'Could not update your saved trails');
+            updateCurrentFavourite({error: err?.message || 'Could not update saved status.'});
         } finally {
             setUpdatingFavourite(false);
         }

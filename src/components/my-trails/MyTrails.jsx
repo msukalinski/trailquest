@@ -97,6 +97,7 @@ export default function MyTrails() {
             });
         } catch (err) {
             setDeleteError(err?.message || 'Could not delete this trail.');
+            return;
         } finally {
             setDeletingId(null);
         }
@@ -116,7 +117,7 @@ export default function MyTrails() {
                     totalFavourites
                 }
             })
-        } catch (err) {
+        } catch {
             setFavouriteCountError('Trail deleted, but the favourites total count could not be refreshed.');
         }
     }
@@ -181,6 +182,12 @@ export default function MyTrails() {
                                             : currentResult.totalFavourites}
                                 </strong>
                                 <span>Hikers saved your trails</span>
+
+                                {favouriteCountError && (
+                                    <small className="d-block text-danger mt-1" role="alert">
+                                        {favouriteCountError}
+                                    </small>
+                                )}
                             </div>
                         </div>
                     </div>
