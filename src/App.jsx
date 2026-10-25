@@ -9,7 +9,6 @@ import MyTrails from "./components/my-trails/MyTrails"
 import Login from "./components/login/Login"
 import Register from "./components/register/Register"
 import About from "./components/about/About"
-import Help from "./components/help/Help"
 import Terms from "./components/terms/Terms"
 import Privacy from "./components/privacy/Privacy"
 import NotFound from "./components/not-found/NotFound"
@@ -27,7 +26,6 @@ function App() {
 					<Route path="/trails" element={<TrailsCatalog />} />
 					<Route path="/trails/:trailId/details" element={<TrailDetails />} />
 					<Route path="/about" element={<About />} />
-					<Route path="/help" element={<Help />} />
 					<Route path="/terms" element={<Terms />} />
 					<Route path="/privacy" element={<Privacy />} />
 

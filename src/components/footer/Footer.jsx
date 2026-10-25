@@ -40,13 +40,6 @@ export default function Footer() {
                             </Link>
 
                             <Link
-                                to="/help"
-                                className="text-decoration-none text-secondary"
-                            >
-                                Help
-                            </Link>
-
-                            <Link
                                 to="/terms"
                                 className="text-decoration-none text-secondary"
                             >
