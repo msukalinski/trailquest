@@ -28,6 +28,7 @@ export default function MyTrails() {
     const loading = !currentResult;
     const [deletingId, setDeletingId] = useState(null);
     const [deleteError, setDeleteError] = useState('');
+    const [favouriteCountError, setFavouriteCountError] = useState('');
 
     useEffect(() => {
         if (initializing || !userId) {
@@ -84,8 +85,6 @@ export default function MyTrails() {
         try {
             await deleteTrail(id);
 
-            const totalFavourites = await getTotalFavouritesReceived(userId);
-
             setLoadResult(current => {
                 if (current?.userId !== userId || !current?.trails) {
                     return current;
@@ -94,13 +93,31 @@ export default function MyTrails() {
                 return {
                     ...current,
                     trails: current.trails.filter(trail => trail.id !== id),
-                    totalFavourites
                 };
             });
         } catch (err) {
             setDeleteError(err?.message || 'Could not delete this trail.');
         } finally {
             setDeletingId(null);
+        }
+
+        setFavouriteCountError('');
+
+        try {
+            const totalFavourites = await getTotalFavouritesReceived(userId);
+
+            setLoadResult(current => {
+                if (current?.userId !== userId) {
+                    return current;
+                }
+
+                return {
+                    ...current,
+                    totalFavourites
+                }
+            })
+        } catch (err) {
+            setFavouriteCountError('Trail deleted, but the favourites total count could not be refreshed.');
         }
     }
 
@@ -157,7 +174,11 @@ export default function MyTrails() {
 
                             <div>
                                 <strong>
-                                    {loading ? '...' : error ? '-' : currentResult.totalFavourites}
+                                    {loading
+                                        ? '...'
+                                        : error || favouriteCountError
+                                            ? '-'
+                                            : currentResult.totalFavourites}
                                 </strong>
                                 <span>Hikers saved your trails</span>
                             </div>
