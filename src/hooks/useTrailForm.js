@@ -19,7 +19,7 @@ export default function useTrailForm(callback, initialTrail = {}) {
         const trailData = {
             title: formValues.title.trim(),
             location: formValues.location.trim(),
-            region: formValues.region.trim(),
+            region: formValues.region.trim() || null,
             difficulty: formValues.difficulty,
             distance: Number(formValues.distance),
             duration: Number(formValues.duration),
