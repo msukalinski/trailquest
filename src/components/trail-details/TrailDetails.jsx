@@ -1,14 +1,17 @@
 import { Link, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 
-import { deleteTrail, getTrailById } from "../../services/trailService";
 import useUser from "../../hooks/useUser";
+
+import { deleteTrail, getTrailById } from "../../services/trailService";
+import { isTrailSaved, saveTrail, unsaveTrail } from "../../services/favouriteService";
 
 import Loader from "../loader/Loader";
 import ErrorMessage from "../error-message/ErrorMessage";
 import NotFound from "../not-found/NotFound";
+
 import './TrailDetails.css'
-import { isTrailSaved, saveTrail, unsaveTrail } from "../../services/favouriteService";
+import toast from "react-hot-toast";
 
 export default function TrailDetails() {
     const { trailId } = useParams();
@@ -19,6 +22,7 @@ export default function TrailDetails() {
     const [trail, setTrail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [copied, setCopied] = useState(false);
 
     const [favouriteResult, setFavouriteResult] = useState(null);
     const [updatingFavourite, setUpdatingFavourite] = useState(false);
@@ -129,7 +133,7 @@ export default function TrailDetails() {
 
             updateCurrentFavourite({ isSaved: !isSaved });
         } catch (err) {
-            updateCurrentFavourite({error: err?.message || 'Could not update saved status.'});
+            updateCurrentFavourite({ error: err?.message || 'Could not update saved status.' });
         } finally {
             setUpdatingFavourite(false);
         }
@@ -179,6 +183,19 @@ export default function TrailDetails() {
             console.error('Delete trail error', err.message);
             setError(err.message);
             return;
+        }
+    }
+
+    const copyLinkClickHandler = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+            toast.success('Link copied to the clipboard');
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            toast.error('Could not copy the link. Please try again.');
         }
     }
 
@@ -279,12 +296,14 @@ export default function TrailDetails() {
                             <button
                                 type="button"
                                 className="trail-details-secondary-button"
+                                onClick={copyLinkClickHandler}
+                                disabled={copied}
                             >
                                 <i
-                                    className="bi bi-share"
+                                    className={`bi ${copied ? 'bi-check-lg' : 'bi-share'} me-2`}
                                     aria-hidden="true"
                                 />
-                                Share
+                                {copied ? 'Link copied!' : 'Copy link'}
                             </button>
 
                             {canSaveTrail ? (
