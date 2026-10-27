@@ -303,7 +303,7 @@ export default function TrailDetails() {
                                     className={`bi ${copied ? 'bi-check-lg' : 'bi-share'} me-2`}
                                     aria-hidden="true"
                                 />
-                                {copied ? 'Link copied!' : 'Copy link'}
+                                {copied ? 'Link copied!' : 'Share'}
                             </button>
 
                             {canSaveTrail ? (
